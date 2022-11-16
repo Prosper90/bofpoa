@@ -1,0 +1,20 @@
+.headercontain {
+    background-color: #1B1A1B !important;
+    color: #FFF !important;
+    padding: 10px 55px;
+}
+
+.logonav {
+    margin-right: 132px;
+}
+
+
+.logoimg {
+    width: 7%;
+    height: auto;
+}
+
+
+.each {
+    margin: 0px 10px;
+}
