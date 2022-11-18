@@ -690,7 +690,6 @@ export default function Sectionseven() {
                     </div>
                     <div className="n2-ss-showcase-overlay n2-ow" />
                   </div>
-                   here
                    
                 </div>
 

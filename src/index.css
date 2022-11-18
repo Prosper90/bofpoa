@@ -13625,8 +13625,3 @@ body:not(.has-sidebar-right) .site-grid .container-component {
 }
 
 
-.scrollcontainer {
- display: flex;
- width: 100%;
- 
-}

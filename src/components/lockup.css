@@ -1,0 +1,101 @@
+.border-container {
+    width: 100%;
+    border: 1px solid green;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    height: 471px;
+    color: #FFFF;
+}
+
+
+.border-containertwo {
+    width: 100%;
+    border: 1px solid green;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #FFFF;
+    padding: 10px;
+}
+
+
+.border-containerthree {
+    width: 100%;
+    border: 1px solid green;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #FFFF;
+    padding: 20px;
+}
+
+
+
+.inside {
+    padding: 8px;
+    height: 58px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    text-align: start;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+.choose {
+    margin: 10px 0px 34px 0px;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+
+.poa {
+    width: 10%;
+    height: auto;
+}
+
+
+.inside img {
+    margin-right: 12px;
+}
+
+
+.containform {
+    width: 75%;
+    background: #FFF;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+
+.connect {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+
+
+
+.toast {
+    position: absolute;
+    z-index: 99999999;
+    left: 50%;
+    top: 16%;
+    transform: translate(-50%,-50%);
+}
