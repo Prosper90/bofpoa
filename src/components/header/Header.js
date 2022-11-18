@@ -69,7 +69,7 @@ const vest = () => {
   const getSigner = async ( provider ) => {
     console.log("Second guy");
   provider?.send("eth_requestAccounts", []);
-  const signer =  provider.getSigner();
+  const signer = await provider.getSigner();
   props.setSigner(signer);
   return;
   }

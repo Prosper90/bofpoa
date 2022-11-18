@@ -29,9 +29,13 @@ function App() {
 
     useEffect(() => {
 
-      setTimeout(() => {
-        setMessage('');
-      }, 5000);
+      if(window.ethereum) {
+          setTimeout(() => {
+            setMessage('');
+            setShow(false);
+          }, 5000);
+      }
+
 
     }, [])
 
