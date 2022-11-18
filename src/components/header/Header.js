@@ -92,8 +92,14 @@ const vest = () => {
       //useEffect
       useEffect(() => {
       console.log("Entered");
+     if(!window.ethereum) {
+        props.setbg("warning");
+        props.setMessage("Please install metamask");
+        props.setShow(true);
+     } else {
+       onLoad();
+     }
 
-      onLoad();
 
       if (props.signer !== undefined) {
         console.log("sign ooo")

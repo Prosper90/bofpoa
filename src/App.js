@@ -59,6 +59,12 @@ function App() {
            setChain={setChain}
            chain={chain}
            changed={changed}
+           bg={bg}
+           setbg={setbg}
+           show={show}
+           setShow={setShow}
+           message={message}
+           setMessage={setMessage}
           />
 
           <Routes>
