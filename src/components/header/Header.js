@@ -115,15 +115,17 @@ const vest = () => {
       }, [props.signer, props.changed])
 
 
-     
-      window.ethereum.on('chainChanged', function (chainId) {
-        //account = accounts[0];
-        onLoad();
-        console.log("changed");
-        getSigner(props.provider);
-        getWalletAddress();
-        getChain();
-    });
+     if(window.ethereum) {
+          window.ethereum.on('chainChanged', function (chainId) {
+            //account = accounts[0];
+            onLoad();
+            console.log("changed");
+            getSigner(props.provider);
+            getWalletAddress();
+            getChain();
+        });
+     }
+
 
 
     
