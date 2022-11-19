@@ -18,3 +18,7 @@
 .each {
     margin: 0px 10px;
 }
+
+.add {
+    position: absolute;
+}

@@ -132,21 +132,21 @@ export default function Sectionfour() {
                                         data-skip-lazy={1}
                                       >
                                         <source
-                                          srcSet="/images/slider/cache/0f293b47befdfb8bb079cd09cafc30a8/mkt1500.webp"
+                                          srcSet={mkt}
                                           type="image/webp"
                                           media="(max-width: 425px)"
                                           className="skip-lazy"
                                           data-skip-lazy={1}
                                         />
                                         <source
-                                          srcSet="/images/slider/cache/09e9d0572586b762afdab1b72d50d42b/mkt1500.webp"
+                                          srcSet={mkt}
                                           type="image/webp"
                                           media="(max-width: 800px)"
                                           className="skip-lazy"
                                           data-skip-lazy={1}
                                         />
                                         <source
-                                          srcSet="/images/slider/cache/fcf70092742429de72e7f798ef3ae26a/mkt1500.webp"
+                                          srcSet={mkt}
                                           type="image/webp"
                                           className="skip-lazy"
                                           data-skip-lazy={1}

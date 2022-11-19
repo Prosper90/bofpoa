@@ -5,7 +5,7 @@ import ethereum from "../img/ethereum.svg";
 import binance from "../img/binance.svg";
 import poa from "../img/poa.png";
 import blank from "../img/balnk.webp";
-import wallet from "../img/crypto-wallet.png";
+import wallet from "../img/vault.png";
 import "./lockup.css"
 import { ethers } from 'ethers';
 import { tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID } from '../utils/constants';
@@ -17,6 +17,7 @@ export default function Vesting(props) {
 
     const [selected, setSelected] = useState();
     const [ischecked, setIschecked] = useState(false);
+    const [multipleVest, setMultipleVest] = useState(false);
     const [paramchoose] = useState([
         {
         chainId: `0x${Number(1).toString(16)}`,
@@ -67,6 +68,10 @@ export default function Vesting(props) {
     ])
 
 
+
+    const selectsides = (value) => {
+        setMultipleVest(value);
+    }
 
 
     const getethContract = async () => {
@@ -165,22 +170,25 @@ export default function Vesting(props) {
     
 
 
-    const lock = async (e) => {
+    const singlevest = async (e) => {
         e.preventDefault();
 
         const owner = e.target.owner.value;
         const tokenadd = e.target.tokenadd.value;
         const amount = e.target.amount.value;
-        const unlock = e.target.unlock.value;
+        const tgdate = e.target.tgdate.value;
+        const tgBps = e.target.tgepercent.value;
+        const cycledays = e.target.cycledays.value;
+        const cyclerelease = e.target.cyclerelease.value;
         const description = e.target.description.value;
         //const check = e.target.check.value;
 
-        console.log("checking", ischecked);
+        //console.log("checking", ischecked);
 
         const chaincomp = await props.signer.getChainId();
 
 
-        if(owner == "" || tokenadd == "" || amount == "" || unlock == "" || description == "") {
+        if(owner == "" || tokenadd == "" || amount == "" || tgdate == ""  || cycledays == "" || description == "") {
             props.setbg("warning");
             props.setMessage("Form fields should not be empty");
             props.setShow(true);
@@ -201,9 +209,8 @@ export default function Vesting(props) {
         // Grant the allowance target an allowance to spend our tokens.
         const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
 
-
           const contractInstance =  await getethContract();
-          const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
+          const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
        } 
        else if(chaincomp === bscchainID) {
         //amount
@@ -217,7 +224,7 @@ export default function Vesting(props) {
         const tx = await ERC20TokenContract.approve(bsccontractaddress, reformatamount);
         
         const contractInstance =  await getbscContract();
-        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
      }
      else if(chaincomp === poachainID) {
         //amount
@@ -231,13 +238,105 @@ export default function Vesting(props) {
         const tx = await ERC20TokenContract.approve(poacontractaddress, reformatamount);
 
         const contractInstance =  await getpoaContract();
-        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
      }
 
 
 
     }
 
+
+
+
+    //multivest
+
+    const multivest = async (e) => {
+        e.preventDefault();
+
+        const owner = e.target.owner.value;
+        const ownerinput = owner.split(",");
+
+        const amount = e.target.amount.value;
+        const amountput = amount.split(",");
+
+        const tokenadd = e.target.tokenadd.value;
+        const tgdate = e.target.tgdate.value;
+        const tgBps = e.target.tgepercent.value;
+        const cycledays = e.target.cycledays.value;
+        const cyclerelease = e.target.cyclerelease.value;
+        const description = e.target.description.value;
+        //const check = e.target.check.value;
+
+        //console.log("checking", ischecked);
+
+        const chaincomp = await props.signer.getChainId();
+
+
+        if(owner == "" || tokenadd == "" || amount == "" || tgdate == ""  || cycledays == "" || description == ""   ) {
+            props.setbg("warning");
+            props.setMessage("Form fields should not be empty");
+            props.setShow(true);
+            return;
+          }
+
+
+
+
+       if(chaincomp === ethchainID) {
+        //amount
+        const reformatamount = amountput.map((data) => {
+            ethers.utils.parseEther(data);
+        });
+
+        console.log(reformatamount);
+        
+
+        //approve
+        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
+        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+      
+        // Grant the allowance target an allowance to spend our tokens.
+        const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
+
+          const contractInstance =  await getethContract();
+          const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
+       } 
+       else if(chaincomp === bscchainID) {
+        //amount
+        const reformatamount = amountput.map((data) => {
+            ethers.utils.parseEther(data);
+        });
+
+        //approve
+        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
+        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+        
+        // Grant the allowance target an allowance to spend our tokens.
+        const tx = await ERC20TokenContract.approve(bsccontractaddress, reformatamount);
+        
+        const contractInstance =  await getbscContract();
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
+     }
+     else if(chaincomp === poachainID) {
+        //amount
+        const reformatamount = amountput.map((data) => {
+            ethers.utils.parseEther(data);
+        });
+        
+        //approve
+        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
+        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+        
+        // Grant the allowance target an allowance to spend our tokens.
+        const tx = await ERC20TokenContract.approve(poacontractaddress, reformatamount);
+
+        const contractInstance =  await getpoaContract();
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
+     }
+
+
+
+    }
 
 
     useEffect(() => {
@@ -330,15 +429,7 @@ export default function Vesting(props) {
                     data-related-device="desktopPortrait"
                     className="n2-ow n2-ss-preserve-size n2-ss-preserve-size--slider n2-ss-slide-limiter"
                 />
-                <div
-                    data-first={1}
-                    data-slide-duration={0}
-                    data-id={3}
-                    data-slide-public-id={1}
-                    data-title="Slide"
-                    className="n2-ss-slide n2-ow n2-ss-slide-3 n2-ss-slide-active"
-                    style={{ height: "696.656px" }}
-                >
+
                     <div
                     role="note"
                     className="n2-ss-slide--focus"
@@ -351,7 +442,7 @@ export default function Vesting(props) {
                         className="n2-ss-layer n2-ow n-uc-hNm9cZsp1Wmj"
                         data-sstype="slide"
                         data-pm="default"
-                        style={{ perspective: 1000 }}
+                        style={{ perspective: 1000, paddingTop: '0px' }}
                     >
                         <div
                         className="n2-ss-layer n2-ow n-uc-11359b3592b3f"
@@ -450,7 +541,8 @@ export default function Vesting(props) {
                             style={{
                                 transformOrigin: "50% 50% 0px",
                                 filter: "none",
-                                opacity: 1
+                                opacity: 1,
+                                marginBottom: '0px'
                             }}
                             >
                             </div>
@@ -462,7 +554,8 @@ export default function Vesting(props) {
                             style={{
                                 transformOrigin: "50% 50% 0px",
                                 opacity: 1,
-                                marginBottom: '0px'
+                                marginBottom: '0px',
+                                marginTop: '0px'
                             }}
                             >
                             <div className="n2-ss-layer-row n2-ss-layer-with-background n-uc-17f642cb2e47c-inner">
@@ -517,19 +610,139 @@ export default function Vesting(props) {
 
                                    <div className="border-containerthree">
 
-                                     <div className="choose"> Create your lock </div>
+                                     <div className="top"> 
+                                       <div className="choose">Create your Vest</div> 
+
+                                       <div className="slect-sides">
+                                         <div className={ !multipleVest && "chooseactive"} onClick={() => selectsides(false)}>Single</div>
+                                         <div className={multipleVest && "chooseactive"} onClick={() => selectsides(true)}>Multiple</div>
+                                       </div>
+                                    </div>
 
                                     <div className="containform">
+                                   <>
+                                     { !multipleVest ?
 
-                                    <form class="w-100" onSubmit={lock}>
+                                            <form class="w-100" onSubmit={singlevest}>
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputEmail1 text-dark">Owner address</label>
+                                                <input
+                                                type="email"
+                                                className="form-control"
+                                                id="exampleInputEmail1"
+                                                aria-describedby="emailHelp"
+                                                placeholder="Enter owner address"
+                                                name="owner"
+                                                />
+                                                <small id="emailHelp" className="form-text text-muted">
+                                                make sure this address is correct
+                                                </small>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputPassword1 text-dark">Token address</label>
+                                                <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="token address"
+                                                name="tokenadd"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputPassword1 text-dark">date</label>
+                                                <input
+                                                type="date"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="date to unlock"
+                                                name="tgdate"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputPassword1 text-dark">amount</label>
+                                                <input
+                                                type="number"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="amount to lock up"
+                                                name="amount"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputPassword1 text-dark">TGE percent</label>
+                                                <input
+                                                type="number"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="TGE percent"
+                                                name="tgepercent"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputPassword1 text-dark">cycle days</label>
+                                                <input
+                                                type="date"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="cycle"
+                                                name="cycledays"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputPassword1 text-dark">cycle release percent</label>
+                                                <input
+                                                type="number"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="cycle release"
+                                                name="cyclerelease"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputPassword1 text-dark">description</label>
+                                                <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="description"
+                                                name="description"
+                                                />
+                                            </div>
+
+                                            <div className="form-group form-check">
+                                            <input type="checkbox" className="form-check-input" checked={ischecked} id="exampleCheck1" onClick={setcheck} />
+                                            <label className="form-check-label text-dark" htmlFor="exampleCheck1">
+                                                isLpToken
+                                            </label>
+                                            </div>
+
+                                            <div className="w-100 d-flex justify-content-center">
+
+                                            <button type="submit" className="btn btn-success">
+                                                Vest
+                                            </button>
+
+                                            </div>
+
+                                            </form>
+
+                                        :
+
+                                        <form class="w-100" onSubmit={multivest}>
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputEmail1 text-dark">Owner address</label>
+                                            <label htmlFor="exampleInputEmail1 text-dark">Owners addresses</label>
                                             <input
                                             type="email"
                                             className="form-control"
                                             id="exampleInputEmail1"
                                             aria-describedby="emailHelp"
-                                            placeholder="Enter owner address"
+                                            placeholder="Enter owner addresses"
                                             name="owner"
                                             />
                                             <small id="emailHelp" className="form-text text-muted">
@@ -537,35 +750,68 @@ export default function Vesting(props) {
                                             </small>
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputPassword1 text-dark">Token address</label>
+                                            <label htmlFor="exampleInputPassword1 text-dark">Token addresses</label>
                                             <input
                                             type="text"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            placeholder="token address"
+                                            placeholder="token addresses"
                                             name="tokenadd"
                                             />
                                         </div>
 
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputPassword1 text-dark">amount</label>
-                                            <input
-                                            type="number"
-                                            className="form-control"
-                                            id="exampleInputPassword1"
-                                            placeholder="amount to lock up"
-                                            name="amount"
-                                            />
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label htmlFor="exampleInputPassword1 text-dark">unlock date</label>
+                                            <label htmlFor="exampleInputPassword1 text-dark">date</label>
                                             <input
                                             type="date"
                                             className="form-control"
                                             id="exampleInputPassword1"
                                             placeholder="date to unlock"
-                                            name="unlock"
+                                            name="tgdate"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="exampleInputPassword1 text-dark">amounts</label>
+                                            <input
+                                            type="number"
+                                            className="form-control"
+                                            id="exampleInputPassword1"
+                                            placeholder="amounts to vest"
+                                            name="amount"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="exampleInputPassword1 text-dark">TGE percent</label>
+                                            <input
+                                            type="number"
+                                            className="form-control"
+                                            id="exampleInputPassword1"
+                                            placeholder="TGE percent"
+                                            name="tgepercent"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="exampleInputPassword1 text-dark">cycle days</label>
+                                            <input
+                                            type="date"
+                                            className="form-control"
+                                            id="exampleInputPassword1"
+                                            placeholder="cycle"
+                                            name="cycledays"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="exampleInputPassword1 text-dark">cycle release percent</label>
+                                            <input
+                                            type="number"
+                                            className="form-control"
+                                            id="exampleInputPassword1"
+                                            placeholder="cycle release"
+                                            name="cyclerelease"
                                             />
                                         </div>
 
@@ -590,12 +836,16 @@ export default function Vesting(props) {
                                         <div className="w-100 d-flex justify-content-center">
 
                                         <button type="submit" className="btn btn-success">
-                                            Lock
+                                            Vest
                                         </button>
 
                                         </div>
 
                                         </form>
+                                      
+                                     }
+                                   </>
+
 
                                     </div>
                                     
@@ -658,7 +908,6 @@ export default function Vesting(props) {
                         </div>
                     </div>
                     </div>
-                </div>{" "}
                 </div>
             </div>
             </div>

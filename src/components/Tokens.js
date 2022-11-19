@@ -1,17 +1,108 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import videoplay from "../img/blgr.mp4";
 import Assetone from "../img/Asset21500.svg";
 import blank from "../img/balnk.webp";
 import bofapes from "../img/bofapes1500.png";
+import "./lockup.css";
+import { ethers } from 'ethers';
+import wallet from "../img/vault.png";
+import { tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID } from '../utils/constants';
 
 
-export default function Tokens() {
+
+
+
+
+export default function Tokens(props) {
+
+
+    const [lockedTokens, setLockedTokens] = useState([]);
+
+
+    const getethContract = async () => {
+        //console.log("bad guy called");
+        const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
+        const signer =  temporalProvider.getSigner();
+        return new ethers.Contract(ethcontractaddress, ethcontractABI, props.signer);
+    }
+
+
+    const getbscContract = async () => {
+        //console.log("bad guy called");
+        const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
+        const signer =  temporalProvider.getSigner();
+        return new ethers.Contract(bsccontractaddress, ethcontractABI, props.signer);
+    }
+
+
+    const getpoaContract = async () => {
+        //console.log("bad guy called");
+        const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
+        const signer =  temporalProvider.getSigner();
+        return new ethers.Contract(poacontractaddress, ethcontractABI, props.signer);
+    }
 
 
 
 
 
-    
+    const getTokens = async ()  => {
+      
+        const contractInstanceone =  await getethContract();
+        const ethTokencount = await contractInstanceone.getTotalLockCount();
+
+        const contractInstancetwo =  await getbscContract();
+        const bscTokencount = await contractInstancetwo.getTotalLockCount();
+
+        const contractInstancethree =  await getpoaContract();
+        const poaTokencount = await contractInstancethree.getTotalLockCount();
+        
+
+        //temp arrs
+        const etharr = [];
+        const bscarr = [];
+        const poaarr = [];
+
+         //for eth
+        for (let index = 0; index < ethTokencount; index++) {
+            const tokens = await contractInstanceone.getLockAt(index);
+            etharr.push(tokens);
+        }
+
+
+        //for bsc
+        for (let index = 0; index < bscTokencount; index++) {
+            const tokens = await contractInstancetwo.getLockAt(index);
+            bscarr.push(tokens);
+        }
+
+
+
+        //for poa
+        for (let index = 0; index < poaTokencount; index++) {
+            const tokens = await contractInstancethree.getLockAt(index);
+            poaarr.push(tokens);
+        }
+
+
+        setTimeout(() => {
+            console.log("All wrapped up setTimeOut market");
+            setLockedTokens(lockedTokens => [...lockedTokens, ...etharr, ...bscarr,  ...poaarr]);
+          }, 3000);
+
+    }
+
+
+
+
+        useEffect(() => {
+            
+            getTokens();
+
+        }, []);
+
+
+
 
   return (
 <div className="n2_clear">
@@ -262,34 +353,7 @@ export default function Tokens() {
                                 >
                                     <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1e90d8d67ad5d-inner" />
                                 </div>
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-14a07b3d9f506"
-                                    data-pm="default"
-                                    data-sstype="col"
-                                >
-                                    <div
-                                    className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-14a07b3d9f506-inner"
-                                    style={{ perspective: 1000 }}
-                                    >
-                                    <div
-                                        className="n2-ss-layer n2-ow n-uc-1fb8efeb10923"
-                                        data-pm="normal"
-                                        data-sstype="layer"
-                                    >
-                                        <div className="n2-ss-button-container n2-ss-item-content n2-ow n2-font-ba5ca255ca313fbd089eaa0091c40c9a-link  n2-ss-nowrap">
-                                        <a
-                                            className="n2-style-95a0a974b25abe206ae4461a72bd2acb-heading  n2-ow "
-                                            href="https://swap.proofofapes.com/#/swap?outputCurrency=0x3C10DF9a009e97397F6c436E6DdFb2226D72429b"
-                                            tabIndex={0}
-                                        >
-                                            <div>
-                                            <div>BUY $BANK</div>
-                                            </div>
-                                        </a>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
+
                                 </div>
                             </div>
                             </div>
@@ -298,13 +362,9 @@ export default function Tokens() {
                             data-pm="normal"
                             data-sstype="row"
                             >
-                            <div className="n2-ss-layer-row n2-ss-layer-with-background n-uc-18f5dfc7da9d3-inner">
-                                <div
-                                className="n2-ss-layer-row-inner "
-                                style={{ perspective: 1000 }}
-                                >
-        <table className="table table-light">
-        <thead>
+
+        <table className="table worktable">
+        <thead className='thead'>
             <tr>
             <th scope="col">Name</th>
             <th scope="col">Blockchain</th>
@@ -315,39 +375,48 @@ export default function Tokens() {
             <th scope="col">Action</th>
             </tr>
         </thead>
+
+         { props.signerAddress &&
         <tbody>
-            <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            </tr>
-            <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>@fat</td>
-            <td>@fat</td>
-            <td>@fat</td>
-            </tr>
-            <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-            <td>@twitter</td>
-            <td>@twitter</td>
-            <td>@twitter</td>
-            </tr>
+            {lockedTokens?.map((data, index) => {
+                <tr className='trfix' key={index}>
+                <th scope="row">{data.id}</th>
+                <td>Mark</td>
+                <td>{data.tgeBps}</td>
+                <td>{ethers.utils.parseEther(data.amount)}</td>
+                <td>${ethers.utils.parseEther(data.unlockedAmount)}</td>
+                <td>{data.cycle}</td>
+                <td>view</td>
+                </tr>
+            })}
         </tbody>
+         
+         }
+
         </table>
 
-                                </div>
-                            </div>
+        {!props.signerAddress && 
+
+            <div className="border-container">
+                        
+                <div className="img-container">
+                <img src={wallet} alt="" />
+                </div>
+
+                <div className="connect">
+                <div className="info">Connect Wallet</div>
+                <div className="">
+                <button class="btn btn-outline-success my-2 my-sm-0 ms-auto">Connect wallet</button>
+                </div>
+
+                </div>
+
+            </div>
+        }
+
+
+
+
                             </div>
                         </div>
                         </div>

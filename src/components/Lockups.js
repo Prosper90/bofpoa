@@ -5,7 +5,7 @@ import ethereum from "../img/ethereum.svg";
 import binance from "../img/binance.svg";
 import poa from "../img/poa.png";
 import blank from "../img/balnk.webp";
-import wallet from "../img/crypto-wallet.png";
+import wallet from "../img/vault.png";
 import "./lockup.css"
 import { ethers } from 'ethers';
 import { tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID } from '../utils/constants';
@@ -351,7 +351,7 @@ export default function Lockups(props) {
                         className="n2-ss-layer n2-ow n-uc-hNm9cZsp1Wmj"
                         data-sstype="slide"
                         data-pm="default"
-                        style={{ perspective: 1000 }}
+                        style={{ perspective: 1000, paddingTop: '0px' }}
                     >
                         <div
                         className="n2-ss-layer n2-ow n-uc-11359b3592b3f"
