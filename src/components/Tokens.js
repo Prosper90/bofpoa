@@ -17,6 +17,8 @@ export default function Tokens(props) {
 
 
     const [lockedTokens, setLockedTokens] = useState([]);
+    const [lockswitch, setLockSwitch] = useState(false);
+    const [myownlock, setMyOwmLock] = useState();
 
 
     const getethContract = async () => {
@@ -47,6 +49,14 @@ export default function Tokens(props) {
 
 
     const getTokens = async ()  => {
+
+
+        if(!props.signerAddress) {
+            props.setbg("warning");
+            props.setMessage("Connect Wallet to Proceed");
+            props.setShow(true);
+            return;
+        }
       
         const contractInstanceone =  await getethContract();
         const ethTokencount = await contractInstanceone.getTotalLockCount();
@@ -93,13 +103,50 @@ export default function Tokens(props) {
     }
 
 
+    //get my locks 
+
+    const mylocks = async () => {
+
+        if(!props.signerAddress) {
+            props.setbg("warning");
+            props.setMessage("Connect Wallet to Proceed");
+            props.setShow(true);
+            return;
+        }
+        console.log("Here Testing");
+        setLockSwitch(true);
+
+        const chaincomp = await props.signer.getChainId();
+        
+        if(chaincomp === ethchainID) {
+            const contractInstance =  await getethContract();
+            const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
+            const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
+            setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
+        }
+        else if(chaincomp === bscchainID) {
+            const contractInstance =  await getbscContract();
+            const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
+            const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
+            setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
+        }
+        else if(chaincomp === poachainID) {
+            const contractInstance =  await getpoaContract();
+            const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
+            const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
+            setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
+        }
+        
+    }
+
+
 
 
         useEffect(() => {
             
             getTokens();
 
-        }, []);
+        }, [props.signerAddress]);
 
 
 
@@ -196,7 +243,7 @@ export default function Tokens(props) {
                     data-slide-public-id={1}
                     data-title="Slide"
                     className="n2-ss-slide n2-ow n2-ss-slide-3 n2-ss-slide-active"
-                    style={{ height: "696.656px" }}
+                    style={{ height: '100vh' }}
                 >
                     <div
                     role="note"
@@ -210,7 +257,7 @@ export default function Tokens(props) {
                         className="n2-ss-layer n2-ow n-uc-hNm9cZsp1Wmj"
                         data-sstype="slide"
                         data-pm="default"
-                        style={{ perspective: 1000 }}
+                        style={{ perspective: 1000, paddingTop: '0px' }}
                     >
                         <div
                         className="n2-ss-layer n2-ow n-uc-11359b3592b3f"
@@ -320,7 +367,8 @@ export default function Tokens(props) {
                             data-sstype="row"
                             style={{
                                 transformOrigin: "50% 50% 0px",
-                                opacity: 1
+                                opacity: 1,
+                                marginBottom: '0px'
                             }}
                             >
                             <div className="n2-ss-layer-row n2-ss-layer-with-background n-uc-17f642cb2e47c-inner">
@@ -329,29 +377,9 @@ export default function Tokens(props) {
                                 style={{ perspective: 1000 }}
                                 >
 
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1512ec562243a"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1512ec562243a-inner" />
-                                </div>
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1c094b50d1f04"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1c094b50d1f04-inner" />
-                                </div>
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1e90d8d67ad5d"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1e90d8d67ad5d-inner" />
+
+                                <div className="w-100 d-flex justify-content-end pr-2">
+                                  <button className={lockswitch ? "btn btn-success my-2 my-sm-0 ms-auto" : "btn btn-outline-success my-2 my-sm-0 ms-auto"} onClick={mylocks}>My locks</button>
                                 </div>
 
                                 </div>
@@ -362,61 +390,92 @@ export default function Tokens(props) {
                             data-pm="normal"
                             data-sstype="row"
                             >
-
-        <table className="table worktable">
-        <thead className='thead'>
-            <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Blockchain</th>
-            <th scope="col">Liquidity locked</th>
-            <th scope="col">Tokens Locked</th>
-            <th scope="col">Value Locked</th>
-            <th scope="col">Next unlocked</th>
-            <th scope="col">Action</th>
-            </tr>
-        </thead>
-
-         { props.signerAddress &&
-        <tbody>
-            {lockedTokens?.map((data, index) => {
-                <tr className='trfix' key={index}>
-                <th scope="row">{data.id}</th>
-                <td>Mark</td>
-                <td>{data.tgeBps}</td>
-                <td>{ethers.utils.parseEther(data.amount)}</td>
-                <td>${ethers.utils.parseEther(data.unlockedAmount)}</td>
-                <td>{data.cycle}</td>
-                <td>view</td>
-                </tr>
-            })}
-        </tbody>
-         
-         }
-
-        </table>
-
-        {!props.signerAddress && 
-
-            <div className="border-container">
-                        
-                <div className="img-container">
-                <img src={wallet} alt="" />
-                </div>
-
-                <div className="connect">
-                <div className="info">Connect Wallet</div>
-                <div className="">
-                <button class="btn btn-outline-success my-2 my-sm-0 ms-auto">Connect wallet</button>
-                </div>
-
-                </div>
-
-            </div>
-        }
+                            <div className="n2-ss-layer-row n2-ss-layer-with-background n-uc-18f5dfc7da9d3-inner">
+                                <div
+                                className="n2-ss-layer-row-inner "
+                                style={{ perspective: 1000 }}
+                                >
 
 
+                            <div className="containthem">
+                                {/* here */}
 
+                                <div className="tablecontain table-responsive">
+                                    <table className="table worktable">
+                                    <thead className='thead'>
+                                        <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Blockchain</th>
+                                        <th scope="col">Liquidity locked</th>
+                                        <th scope="col">Tokens Locked</th>
+                                        <th scope="col">Value Locked</th>
+                                        <th scope="col">Next unlocked</th>
+                                        <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
 
+                                    {props.signerAddress &&
+                                    <>
+                                    {lockswitch ?
+
+                                        <tbody>
+                                        {lockedTokens?.map((data, index) => {
+                                            <tr className='trfix' key={index}>
+                                            <th scope="row">{data.id}</th>
+                                            <td>Mark</td>
+                                            <td>{data.tgeBps}</td>
+                                            <td>{ethers.utils.parseEther(data.amount)}</td>
+                                            <td>${ethers.utils.parseEther(data.unlockedAmount)}</td>
+                                            <td>{data.cycle}</td>
+                                            <td>view</td>
+                                            </tr>
+                                        })}
+                                        </tbody>
+
+                                        :
+                                        <tbody>
+                                        {myownlock?.map((data, index) => {
+                                            <tr className='trfix' key={index}>
+                                            <th scope="row">{data.id}</th>
+                                            <td>Mark</td>
+                                            <td>{data.tgeBps}</td>
+                                            <td>{ethers.utils.parseEther(data.amount)}</td>
+                                            <td>${ethers.utils.parseEther(data.unlockedAmount)}</td>
+                                            <td>{data.cycle}</td>
+                                            <td>view</td>
+                                            </tr>
+                                        })}
+                                        </tbody>
+                                     }
+                                    </>
+                                    }
+
+                                    </table>
+                                </div>
+                                    {!props.signerAddress && 
+
+                                        <div className="border-container">
+                                                    
+                                            <div className="img-container">
+                                            <img className='connectwallet' src={wallet} alt="" />
+                                            </div>
+
+                                            <div className="connect">
+                                            <div className="info">Connect Wallet</div>
+                                            <div className="">
+                                            <button class="btn btn-outline-success my-2 my-sm-0 ms-auto">Connect wallet</button>
+                                            </div>
+
+                                            </div>
+
+                                        </div>
+                                    }
+
+                                {/* here */}
+                            </div>                    
+
+                                </div>
+                            </div>
                             </div>
                         </div>
                         </div>

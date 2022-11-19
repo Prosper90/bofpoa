@@ -337,7 +337,7 @@ export default function Lockups(props) {
                     data-slide-public-id={1}
                     data-title="Slide"
                     className="n2-ss-slide n2-ow n2-ss-slide-3 n2-ss-slide-active"
-                    style={{ height: "696.656px" }}
+                    style={{ height: '100vh' }}
                 >
                     <div
                     role="note"
@@ -496,6 +496,8 @@ export default function Lockups(props) {
                                     <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1e90d8d67ad5d-inner" />
                                 </div>
 
+                                  <h3 className='text-white'>Instantly create your own unique token lock.</h3>
+
                                 </div>
                             </div>
                             </div>
@@ -636,7 +638,7 @@ export default function Lockups(props) {
                                 <div className="border-container">
                                     
                                     <div className="img-container">
-                                        <img src={wallet} alt="" />
+                                        <img src={wallet} className="connectwallet" alt="" />
                                     </div>
 
                                    <div className="connect">

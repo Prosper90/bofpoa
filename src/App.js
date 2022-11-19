@@ -84,6 +84,12 @@ function App() {
                 setSigner={setSigner}
                 signerAddress={signerAddress}
                 setSignerAddress={setSignerAddress}
+                bg={bg}
+                setbg={setbg}
+                show={show}
+                setShow={setShow}
+                message={message}
+                setMessage={setMessage}
                />} />
           </Routes>
 

@@ -1,3 +1,8 @@
+html, body {
+    width: 100%;
+    height: 100vh;
+}
+
 .container-bottom-a>*,
 .container-bottom-b>*,
 .container-top-a>*,

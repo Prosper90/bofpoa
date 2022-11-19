@@ -429,7 +429,15 @@ export default function Vesting(props) {
                     data-related-device="desktopPortrait"
                     className="n2-ow n2-ss-preserve-size n2-ss-preserve-size--slider n2-ss-slide-limiter"
                 />
-
+                <div
+                    data-first={1}
+                    data-slide-duration={0}
+                    data-id={3}
+                    data-slide-public-id={1}
+                    data-title="Slide"
+                    className="n2-ss-slide n2-ow n2-ss-slide-3 n2-ss-slide-active"
+                    style={{ height: '100vh' }}
+                >
                     <div
                     role="note"
                     className="n2-ss-slide--focus"
@@ -541,8 +549,7 @@ export default function Vesting(props) {
                             style={{
                                 transformOrigin: "50% 50% 0px",
                                 filter: "none",
-                                opacity: 1,
-                                marginBottom: '0px'
+                                opacity: 1
                             }}
                             >
                             </div>
@@ -554,8 +561,7 @@ export default function Vesting(props) {
                             style={{
                                 transformOrigin: "50% 50% 0px",
                                 opacity: 1,
-                                marginBottom: '0px',
-                                marginTop: '0px'
+                                marginBottom: '0px'
                             }}
                             >
                             <div className="n2-ss-layer-row n2-ss-layer-with-background n-uc-17f642cb2e47c-inner">
@@ -603,25 +609,28 @@ export default function Vesting(props) {
                                 style={{ perspective: 1000 }}
                                 >
 
-                              { props.signerAddress ?
 
-                              <>
+
+                                {/* here */}
+                                { props.signerAddress ?
+
+                                <>
                                 {selected === props.chain ?
 
-                                   <div className="border-containerthree">
+                                    <div className="border-containerthree">
 
-                                     <div className="top"> 
-                                       <div className="choose">Create your Vest</div> 
+                                    <div className="top"> 
+                                        <div className="choose">Create your Vest</div> 
 
-                                       <div className="slect-sides">
-                                         <div className={ !multipleVest && "chooseactive"} onClick={() => selectsides(false)}>Single</div>
-                                         <div className={multipleVest && "chooseactive"} onClick={() => selectsides(true)}>Multiple</div>
-                                       </div>
+                                        <div className="slect-sides">
+                                        <div className={ !multipleVest ? "chooseactive" : "normalchoose" } onClick={() => selectsides(false)}>Single</div>
+                                        <div className={multipleVest ? "chooseactive" : "normalchoose" } onClick={() => selectsides(true)}>Multiple</div>
+                                        </div>
                                     </div>
 
                                     <div className="containform">
-                                   <>
-                                     { !multipleVest ?
+                                    <>
+                                    { !multipleVest ?
 
                                             <form class="w-100" onSubmit={singlevest}>
                                             <div className="form-group">
@@ -842,63 +851,64 @@ export default function Vesting(props) {
                                         </div>
 
                                         </form>
-                                      
-                                     }
-                                   </>
+                                        
+                                    }
+                                    </>
 
 
                                     </div>
                                     
 
-                                   </div>
+                                    </div>
 
-                                   :
-                                   <div className="border-containertwo">
-                                   <div className="choose"> Choose the blockchain that the token you are vesting is built on. </div>
+                                    :
+                                    <div className="border-containertwo">
+                                    <div className="choose"> Choose the blockchain that the token you are vesting is built on. </div>
 
-                                   <div className="row gy-4 w-100 p-2">
-                                      
-                                      <div className="col-xs-12 col-md-4 col-lg-4  chains" onClick={() => choose(ethchainID)}>
-                                          <div className="col inside">
-                                             <img src={ethereum} class="img-thumbnail rounded mr-1" alt="" /> <div className="">Ethereum</div> 
-                                          </div>
-                                      </div>
+                                    <div className="row gy-4 w-100 p-2">
+                                        
+                                        <div className="col-xs-12 col-md-4 col-lg-4  chains" onClick={() => choose(ethchainID)}>
+                                            <div className="col inside">
+                                            <img src={ethereum} class="img-thumbnail rounded mr-1" alt="" /> <div className="">Ethereum</div> 
+                                            </div>
+                                        </div>
 
-                                      <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(bscchainID)}>
-                                         <div className="col inside">
+                                        <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(bscchainID)}>
+                                        <div className="col inside">
                                             <img src={binance} class="img-thumbnail rounded mr-1" alt="" /> <div className="">Binance</div> 
-                                          </div>
-                                      </div>
+                                            </div>
+                                        </div>
 
-                                      <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(poachainID)}>
-                                          <div className="col inside">
-                                          <img src={poa} class="img-thumbnail rounded mr-2 poa" alt="" /><div className="">ProofofApes</div>
-                                          </div>
-                                      </div>
+                                        <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(poachainID)}>
+                                            <div className="col inside">
+                                            <img src={poa} class="img-thumbnail rounded mr-2 poa" alt="" /><div className="">ProofofApes</div>
+                                            </div>
+                                        </div>
 
-                                   </div>
+                                    </div>
 
-                               </div>
-                                 }
-                              </>
+                                </div>
+                                }
+                                </>
 
                                 : 
                                 <div className="border-container">
                                     
                                     <div className="img-container">
-                                        <img src={wallet} alt="" />
+                                        <img src={wallet} className="connectwallet" alt="" />
                                     </div>
 
-                                   <div className="connect">
-                                     <div className="info">Connect Wallet</div>
-                                     <div className="">
+                                    <div className="connect">
+                                    <div className="info">Connect Wallet</div>
+                                    <div className="">
                                         <button class="btn btn-outline-success my-2 my-sm-0 ms-auto">Connect wallet</button>
-                                     </div>
+                                    </div>
 
-                                   </div>
-                                     
+                                    </div>
+                                    
                                 </div>
                                 }
+                                {/* here */}
                                
 
                                 </div>
@@ -908,6 +918,7 @@ export default function Vesting(props) {
                         </div>
                     </div>
                     </div>
+                </div>{" "}
                 </div>
             </div>
             </div>
