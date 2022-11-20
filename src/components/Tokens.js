@@ -6,7 +6,7 @@ import bofapes from "../img/bofapes1500.png";
 import "./lockup.css";
 import { ethers } from 'ethers';
 import wallet from "../img/vault.png";
-import { tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID } from '../utils/constants';
+import { testnetcontractaddress, tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID, testID } from '../utils/constants';
 
 
 
@@ -25,7 +25,7 @@ export default function Tokens(props) {
         //console.log("bad guy called");
         const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer =  temporalProvider.getSigner();
-        return new ethers.Contract(ethcontractaddress, ethcontractABI, props.signer);
+        return new ethers.Contract(ethcontractaddress, ethcontractABI, signer);
     }
 
 
@@ -33,7 +33,7 @@ export default function Tokens(props) {
         //console.log("bad guy called");
         const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer =  temporalProvider.getSigner();
-        return new ethers.Contract(bsccontractaddress, ethcontractABI, props.signer);
+        return new ethers.Contract(bsccontractaddress, ethcontractABI, signer);
     }
 
 
@@ -41,7 +41,15 @@ export default function Tokens(props) {
         //console.log("bad guy called");
         const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer =  temporalProvider.getSigner();
-        return new ethers.Contract(poacontractaddress, ethcontractABI, props.signer);
+        return new ethers.Contract(poacontractaddress, ethcontractABI, signer);
+    }
+
+
+    const gettestContract = async () => {
+        //console.log("bad guy called");
+        const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
+        const signer =  temporalProvider.getSigner();
+        return new ethers.Contract(testnetcontractaddress, ethcontractABI, signer);
     }
 
 
@@ -57,7 +65,8 @@ export default function Tokens(props) {
             props.setShow(true);
             return;
         }
-      
+        
+        
         const contractInstanceone =  await getethContract();
         const ethTokencount = await contractInstanceone.getTotalLockCount();
 
@@ -66,12 +75,18 @@ export default function Tokens(props) {
 
         const contractInstancethree =  await getpoaContract();
         const poaTokencount = await contractInstancethree.getTotalLockCount();
+
+        const contractInstancefour =  await gettestContract();
+        const testTokencount = await contractInstancethree.getTotalLockCount();
+
+        console.log(testTokencount);
         
 
         //temp arrs
         const etharr = [];
         const bscarr = [];
         const poaarr = [];
+        const testarr = [];
 
          //for eth
         for (let index = 0; index < ethTokencount; index++) {
@@ -94,10 +109,17 @@ export default function Tokens(props) {
             poaarr.push(tokens);
         }
 
+        //for test
+        for (let index = 0; index < testTokencount; index++) {
+            console.log("inside here")
+            const tokens = await contractInstancefour.getLockAt(index);
+            testarr.push(tokens);
+        }      
+
 
         setTimeout(() => {
             console.log("All wrapped up setTimeOut market");
-            setLockedTokens(lockedTokens => [...lockedTokens, ...etharr, ...bscarr,  ...poaarr]);
+            setLockedTokens(lockedTokens => [...lockedTokens, ...etharr, ...bscarr,  ...poaarr, ...testarr]);
           }, 3000);
 
     }
@@ -135,6 +157,14 @@ export default function Tokens(props) {
             const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
             const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
             setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
+        }
+        else if(chaincomp === testID) {
+            const contractInstance =  await gettestContract();
+            const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
+            const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
+            console.log(mylocks);
+            console.log(lplocks);
+            //setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
         }
         
     }
@@ -243,7 +273,7 @@ export default function Tokens(props) {
                     data-slide-public-id={1}
                     data-title="Slide"
                     className="n2-ss-slide n2-ow n2-ss-slide-3 n2-ss-slide-active"
-                    style={{ height: '100vh' }}
+                    style={{ height: '123vh', overflowY: 'scroll' }}
                 >
                     <div
                     role="note"
@@ -378,7 +408,7 @@ export default function Tokens(props) {
                                 >
 
 
-                                <div className="w-100 d-flex justify-content-end pr-2">
+                                <div className="w-100 d-flex justify-content-end">
                                   <button className={lockswitch ? "btn btn-success my-2 my-sm-0 ms-auto" : "btn btn-outline-success my-2 my-sm-0 ms-auto"} onClick={mylocks}>My locks</button>
                                 </div>
 
@@ -463,7 +493,7 @@ export default function Tokens(props) {
                                             <div className="connect">
                                             <div className="info">Connect Wallet</div>
                                             <div className="">
-                                            <button class="btn btn-outline-success my-2 my-sm-0 ms-auto">Connect wallet</button>
+                                            <button class="btn btn-outline-success my-2 my-sm-0 ms-auto" onClick={() => props.getWalletAddress() } >Connect wallet</button>
                                             </div>
 
                                             </div>

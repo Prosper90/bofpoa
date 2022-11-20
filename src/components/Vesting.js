@@ -8,7 +8,7 @@ import blank from "../img/balnk.webp";
 import wallet from "../img/vault.png";
 import "./lockup.css"
 import { ethers } from 'ethers';
-import { tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID } from '../utils/constants';
+import {testnetcontractaddress, tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID, testID } from '../utils/constants';
 
 
 
@@ -18,6 +18,9 @@ export default function Vesting(props) {
     const [selected, setSelected] = useState();
     const [ischecked, setIschecked] = useState(false);
     const [multipleVest, setMultipleVest] = useState(false);
+    //for  approval
+    const [amountget, setamountget] = useState();
+    const [tokenaddress, setTokenaddress] = useState();
     const [paramchoose] = useState([
         {
         chainId: `0x${Number(1).toString(16)}`,
@@ -98,6 +101,14 @@ export default function Vesting(props) {
     }
 
 
+    const gettestContract = async () => {
+        //console.log("bad guy called");
+        const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
+        const signer =  temporalProvider.getSigner();
+        return new ethers.Contract(testnetcontractaddress, ethcontractABI, props.signer);
+    }
+
+
 
 
 
@@ -167,6 +178,58 @@ export default function Vesting(props) {
     const setcheck = () => {
         setIschecked(!ischecked);
     }
+
+
+
+    //approval
+
+    const approval = async () => {
+
+        //const amount = e.target.amount.value;
+        console.log(amountget);
+        console.log(tokenaddress)
+
+
+        const chaincomp = await props.signer.getChainId();
+
+           
+            //check for single or  mulltiple
+            if(multipleVest) {
+
+            //amount
+            const reformatamount = 2 ** 256 - 1;
+    
+            //approve
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+          
+            // Grant the allowance target an allowance to spend our tokens.
+            const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
+
+            await tx.wait();
+            props.setApprove(tx);
+
+            } else {
+
+            //amount
+            const reformatamount = ethers.utils.parseEther(amountget);
+    
+            //approve
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+          
+            // Grant the allowance target an allowance to spend our tokens.
+            const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
+
+            await tx.wait();
+            props.setApprove(tx);
+
+            }
+
+
+      
+     }
+
     
 
 
@@ -188,7 +251,7 @@ export default function Vesting(props) {
         const chaincomp = await props.signer.getChainId();
 
 
-        if(owner == "" || tokenadd == "" || amount == "" || tgdate == ""  || cycledays == "" || description == "") {
+        if(owner === "" || tokenadd === "" || amount === "" || tgdate === ""  || cycledays === "" || description === "") {
             props.setbg("warning");
             props.setMessage("Form fields should not be empty");
             props.setShow(true);
@@ -240,8 +303,28 @@ export default function Vesting(props) {
         const contractInstance =  await getpoaContract();
         const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
      }
+     else if(chaincomp === testID) {
+        //amount
+        const reformatamount = ethers.utils.parseEther(amount);
+        
+        //approve
+        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
+        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+        
+        // Grant the allowance target an allowance to spend our tokens.
+        const tx = await ERC20TokenContract.approve(testnetcontractaddress, reformatamount);
+
+        const contractInstance =  await gettestContract();
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
+     }
 
 
+     props.setApprove();
+     
+     props.setbg("success");
+     props.setMessage("Token locked");
+     props.setShow(true);
+     return;
 
     }
 
@@ -333,8 +416,28 @@ export default function Vesting(props) {
         const contractInstance =  await getpoaContract();
         const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
      }
+     else if(chaincomp === testID) {
+        //amount
+        const reformatamount = ethers.utils.parseEther(amount);
+        
+        //approve
+        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
+        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+        
+        // Grant the allowance target an allowance to spend our tokens.
+        const tx = await ERC20TokenContract.approve(testnetcontractaddress, reformatamount);
+
+        const contractInstance =  await gettestContract();
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
+     }
 
 
+     props.setApprove();
+     
+     props.setbg("success");
+     props.setMessage("Token Vested");
+     props.setShow(true);
+     return;
 
     }
 
@@ -436,7 +539,7 @@ export default function Vesting(props) {
                     data-slide-public-id={1}
                     data-title="Slide"
                     className="n2-ss-slide n2-ow n2-ss-slide-3 n2-ss-slide-active"
-                    style={{ height: '100vh' }}
+                    style={{ height: '123vh', overflowY: 'scroll' }}
                 >
                     <div
                     role="note"
@@ -595,6 +698,8 @@ export default function Vesting(props) {
                                     <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1e90d8d67ad5d-inner" />
                                 </div>
 
+                                   <h3 className='text-white'>Make your own token vesting contract.</h3>
+
                                 </div>
                             </div>
                             </div>
@@ -636,7 +741,7 @@ export default function Vesting(props) {
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputEmail1 text-dark">Owner address</label>
                                                 <input
-                                                type="email"
+                                                type="text"
                                                 className="form-control"
                                                 id="exampleInputEmail1"
                                                 aria-describedby="emailHelp"
@@ -655,13 +760,15 @@ export default function Vesting(props) {
                                                 id="exampleInputPassword1"
                                                 placeholder="token address"
                                                 name="tokenadd"
+                                                value={tokenaddress}
+                                                onChange={(e) => setTokenaddress(e.target.value)}
                                                 />
                                             </div>
 
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputPassword1 text-dark">date</label>
                                                 <input
-                                                type="date"
+                                                type="datetime-local"
                                                 className="form-control"
                                                 id="exampleInputPassword1"
                                                 placeholder="date to unlock"
@@ -677,6 +784,8 @@ export default function Vesting(props) {
                                                 id="exampleInputPassword1"
                                                 placeholder="amount to lock up"
                                                 name="amount"
+                                                value={amountget}
+                                                onChange={(e) => setamountget(e.target.value)}
                                                 />
                                             </div>
 
@@ -694,7 +803,7 @@ export default function Vesting(props) {
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputPassword1 text-dark">cycle days</label>
                                                 <input
-                                                type="date"
+                                                type="datetime-local"
                                                 className="form-control"
                                                 id="exampleInputPassword1"
                                                 placeholder="cycle"
@@ -732,10 +841,16 @@ export default function Vesting(props) {
                                             </div>
 
                                             <div className="w-100 d-flex justify-content-center">
-
-                                            <button type="submit" className="btn btn-success">
-                                                Vest
-                                            </button>
+                                            
+                                            { props.approve ?
+                                                <button type="submit" className="btn btn-success">
+                                                    Vest
+                                                </button>
+                                            :
+                                                <div type="submit" className="btn btn-success" onClick={approval}>
+                                                    Approve
+                                                </div>
+                                            }
 
                                             </div>
 
@@ -747,7 +862,7 @@ export default function Vesting(props) {
                                         <div className="form-group">
                                             <label htmlFor="exampleInputEmail1 text-dark">Owners addresses</label>
                                             <input
-                                            type="email"
+                                            type="text"
                                             className="form-control"
                                             id="exampleInputEmail1"
                                             aria-describedby="emailHelp"
@@ -766,13 +881,15 @@ export default function Vesting(props) {
                                             id="exampleInputPassword1"
                                             placeholder="token addresses"
                                             name="tokenadd"
+                                            value={tokenaddress}
+                                            onChange={(e) => setTokenaddress(e.target.value)}
                                             />
                                         </div>
 
                                         <div className="form-group">
                                             <label htmlFor="exampleInputPassword1 text-dark">date</label>
                                             <input
-                                            type="date"
+                                            type="datetime-local"
                                             className="form-control"
                                             id="exampleInputPassword1"
                                             placeholder="date to unlock"
@@ -805,7 +922,7 @@ export default function Vesting(props) {
                                         <div className="form-group">
                                             <label htmlFor="exampleInputPassword1 text-dark">cycle days</label>
                                             <input
-                                            type="date"
+                                            type="datetime-local"
                                             className="form-control"
                                             id="exampleInputPassword1"
                                             placeholder="cycle"
@@ -844,9 +961,15 @@ export default function Vesting(props) {
                                         
                                         <div className="w-100 d-flex justify-content-center">
 
-                                        <button type="submit" className="btn btn-success">
-                                            Vest
-                                        </button>
+                                        { props.approve ?
+                                                <button type="submit" className="btn btn-success">
+                                                    Vest
+                                                </button>
+                                            :
+                                                <div type="submit" className="btn btn-success" onClick={approval}>
+                                                    Approve
+                                                </div>
+                                            }
 
                                         </div>
 
@@ -885,6 +1008,12 @@ export default function Vesting(props) {
                                             </div>
                                         </div>
 
+                                        <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(testID)}>
+                                          <div className="col inside">
+                                          <img src={binance} class="img-thumbnail rounded mr-2 poa" alt="" /><div className="">Testnet</div>
+                                          </div>
+                                       </div>
+
                                     </div>
 
                                 </div>
@@ -901,7 +1030,7 @@ export default function Vesting(props) {
                                     <div className="connect">
                                     <div className="info">Connect Wallet</div>
                                     <div className="">
-                                        <button class="btn btn-outline-success my-2 my-sm-0 ms-auto">Connect wallet</button>
+                                        <button class="btn btn-outline-success my-2 my-sm-0 ms-auto"  onClick={() => props.getWalletAddress() } >Connect wallet</button>
                                     </div>
 
                                     </div>

@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import "./header.css";
-import bofapes from "../../img/bofapes1500.png"
+import bofapes from "../../img/bofapes1500.png";
+import vault from "../../img/dapplockericon.png";
+import ethereum from "../../img/ethereum.svg";
+import binance from "../../img/binance.svg";
+import poa from "../../img/poa.png";
 import 'bootstrap/dist/css/bootstrap.css';
 import { ethers } from 'ethers';
 import { useParams, useRouteMatch, useNavigate } from 'react-router-dom';
@@ -46,14 +50,7 @@ const vest = () => {
   console.log(isConnected);
 
 
-  //getWallet address
-  const getWalletAddress = () => {
-    props.signer.getAddress().
-    then(address => {
-      props.setSignerAddress(address)
 
-    })
-  }
 
 
   const getChain = () => {
@@ -72,6 +69,12 @@ const vest = () => {
   const signer = await provider.getSigner();
   props.setSigner(signer);
   return;
+  }
+
+
+  const disconnect = () => {
+    console.log("disconnect")
+    props.setSignerAddress(undefined);
   }
 
 
@@ -105,7 +108,7 @@ const vest = () => {
         console.log("sign ooo")
         console.log(props.signerAddress);
         console.log(props.chain)
-        getWalletAddress();
+        props.getWalletAddress();
         getChain();
         }
 
@@ -121,7 +124,7 @@ const vest = () => {
             onLoad();
             console.log("changed");
             getSigner(props.provider);
-            getWalletAddress();
+            props.getWalletAddress();
             getChain();
         });
      }
@@ -136,7 +139,7 @@ const vest = () => {
     <nav className="navbar navbar-expand-lg headernav">
 
    
-        <img src={bofapes} alt="" className='logoimg' onClick={home} />
+        <img src={vault} alt="" className='logoimg' onClick={home} />
 
 
   <button
@@ -170,7 +173,17 @@ const vest = () => {
       </li>
     </ul>
 
-    <button class="btn btn-outline-success my-2 my-sm-0 ms-auto" onClick={ () => getSigner(props.provider)}>{ props.signer !== undefined ? displayaddr() : "Connect wallet"  }</button>
+
+    <div className="addresscontainer ms-auto">
+      { props.signerAddress &&
+        <div className="img-fluid btn btn-outline-success">
+          <img src={props.chain === 1 ? ethereum : props.chain === 56 ? binance : props.chain === 493 ? poa : binance } alt="chains image" className="img-thumbnail" />
+        </div>
+      }
+       <button class="btn btn-outline-success my-2 my-sm-0" onClick={ !props.signerAddress ? () => getSigner(props.provider) : () => disconnect() }>{ props.signerAddress !== undefined ? displayaddr() : "Connect wallet"  }</button>
+    </div>
+
+   
 
 
   </div>

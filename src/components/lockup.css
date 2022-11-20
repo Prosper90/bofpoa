@@ -191,7 +191,30 @@ Token
     height: auto;
 }
 
+
+.img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.addresscontainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    width: 25%;
+}
+
+
+
 @media screen and (max-width: 600px) {
+
+    .addresscontainer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+        width: 100%;
+    }
     
     .img-container {
         display: flex;
@@ -209,11 +232,21 @@ Token
     .toast {
         position: absolute;
         z-index: 99999999;
-        left: 50%;
-        top: 85%;
+        left: 70%;
+        top: 6%;
         transform: translate(-50%,-50%);
+        width: 200px;
+    }
+
+    .top {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-left: 0px;
     }
 }
+
+
 
 
 .containthem {

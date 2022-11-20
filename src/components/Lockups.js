@@ -8,7 +8,7 @@ import blank from "../img/balnk.webp";
 import wallet from "../img/vault.png";
 import "./lockup.css"
 import { ethers } from 'ethers';
-import { tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID } from '../utils/constants';
+import { testnetcontractaddress, tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID, testID } from '../utils/constants';
 
 
 
@@ -17,6 +17,8 @@ export default function Lockups(props) {
 
     const [selected, setSelected] = useState();
     const [ischecked, setIschecked] = useState(false);
+    const [amountget, setamountget] = useState();
+    const [tokenaddress, setTokenaddress] = useState();
     const [paramchoose] = useState([
         {
         chainId: `0x${Number(1).toString(16)}`,
@@ -49,9 +51,9 @@ export default function Lockups(props) {
         ],
       },
       {
-        chainId: `0x${Number(99).toString(16)}`,
+        chainId: `0x${Number(493).toString(16)}`,
         rpcUrls: [
-          "https://core.poa.network",
+          "https://rpc.proofofapes.com",
         ],
         chainName: "BSC testnet",
         nativeCurrency: {
@@ -60,7 +62,7 @@ export default function Lockups(props) {
           decimals: 18,
         },
         blockExplorerUrls: [
-          "https://explorer.binance.org/smart-testnet",
+          "https://explorer.proofofapes.com",
         ],
       }
     
@@ -90,6 +92,14 @@ export default function Lockups(props) {
         const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer =  temporalProvider.getSigner();
         return new ethers.Contract(poacontractaddress, ethcontractABI, props.signer);
+    }
+
+
+    const gettestContract = async () => {
+        //console.log("bad guy called");
+        const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
+        const signer =  temporalProvider.getSigner();
+        return new ethers.Contract(testnetcontractaddress, ethcontractABI, props.signer);
     }
 
 
@@ -165,6 +175,76 @@ export default function Lockups(props) {
     
 
 
+     const approval = async () => {
+
+        //const amount = e.target.amount.value;
+        console.log(amountget);
+        console.log(tokenaddress)
+
+
+        const chaincomp = await props.signer.getChainId();
+
+        if(chaincomp === ethchainID) {
+            //amount
+            const reformatamount = ethers.utils.parseEther(amountget);
+    
+            //approve
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+          
+            // Grant the allowance target an allowance to spend our tokens.
+            const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
+
+            await tx.wait();
+            props.setApprove(tx);
+           } 
+           else if(chaincomp === bscchainID) {
+            //amount
+            const reformatamount = ethers.utils.parseEther(amountget);
+    
+            //approve
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+            
+            // Grant the allowance target an allowance to spend our tokens.
+            const tx = await ERC20TokenContract.approve(bsccontractaddress, reformatamount);
+            
+            await tx.wait();
+            props.setApprove(tx);
+         }
+         else if(chaincomp === poachainID) {
+            //amount
+            const reformatamount = ethers.utils.parseEther(amountget);
+            
+            //approve
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+            
+            // Grant the allowance target an allowance to spend our tokens.
+            const tx = await ERC20TokenContract.approve(poacontractaddress, reformatamount);
+    
+            await tx.wait();
+            props.setApprove(tx);
+         }
+         else if(chaincomp === testID) {
+            //amount
+            const reformatamount = ethers.utils.parseEther(amountget);
+            
+            //approve
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+            
+            // Grant the allowance target an allowance to spend our tokens.
+            const tx = await ERC20TokenContract.approve(testnetcontractaddress, reformatamount);
+    
+            await tx.wait();
+            props.setApprove(tx);
+         }
+      
+     }
+
+
+
     const lock = async (e) => {
         e.preventDefault();
 
@@ -233,10 +313,32 @@ export default function Lockups(props) {
         const contractInstance =  await getpoaContract();
         const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
      }
+     else if(chaincomp === testID) {
+        //amount
+        const reformatamount = ethers.utils.parseEther(amount);
+        
+        //approve
+        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
+        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
+        
+        // Grant the allowance target an allowance to spend our tokens.
+        await ERC20TokenContract.approve(testnetcontractaddress, reformatamount);
 
+        const contractInstance =  await gettestContract();
+        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
+     }
 
+     props.setApprove();
+     
+     props.setbg("success");
+     props.setMessage("Token locked");
+     props.setShow(true);
+     return;
 
     }
+
+
+    
 
 
 
@@ -337,7 +439,7 @@ export default function Lockups(props) {
                     data-slide-public-id={1}
                     data-title="Slide"
                     className="n2-ss-slide n2-ow n2-ss-slide-3 n2-ss-slide-active"
-                    style={{ height: '100vh' }}
+                    style={{ height: '123vh', overflowY: 'scroll' }}
                 >
                     <div
                     role="note"
@@ -496,7 +598,7 @@ export default function Lockups(props) {
                                     <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1e90d8d67ad5d-inner" />
                                 </div>
 
-                                  <h3 className='text-white'>Instantly create your own unique token lock.</h3>
+                                  <h3 className='text-white'>create your own unique token lock.</h3>
 
                                 </div>
                             </div>
@@ -527,7 +629,7 @@ export default function Lockups(props) {
                                         <div className="form-group">
                                             <label htmlFor="exampleInputEmail1 text-dark">Owner address</label>
                                             <input
-                                            type="email"
+                                            type="text"
                                             className="form-control"
                                             id="exampleInputEmail1"
                                             aria-describedby="emailHelp"
@@ -546,6 +648,8 @@ export default function Lockups(props) {
                                             id="exampleInputPassword1"
                                             placeholder="token address"
                                             name="tokenadd"
+                                            value={tokenaddress}
+                                            onChange={(e) => setTokenaddress(e.target.value)}
                                             />
                                         </div>
 
@@ -557,13 +661,15 @@ export default function Lockups(props) {
                                             id="exampleInputPassword1"
                                             placeholder="amount to lock up"
                                             name="amount"
+                                            value={amountget}
+                                            onChange={(e) => setamountget(e.target.value)}
                                             />
                                         </div>
 
                                         <div className="form-group">
                                             <label htmlFor="exampleInputPassword1 text-dark">unlock date</label>
                                             <input
-                                            type="date"
+                                            type="datetime-local"
                                             className="form-control"
                                             id="exampleInputPassword1"
                                             placeholder="date to unlock"
@@ -591,9 +697,13 @@ export default function Lockups(props) {
                                         
                                         <div className="w-100 d-flex justify-content-center">
 
-                                        <button type="submit" className="btn btn-success">
-                                            Lock
-                                        </button>
+                                          { props.approve ? 
+                                            <button type="submit" className="btn btn-success">
+                                                Lock
+                                            </button>
+                                            :
+                                            <div className="btn btn-success" onClick={approval}>Approve</div>
+                                          }
 
                                         </div>
 
@@ -628,6 +738,13 @@ export default function Lockups(props) {
                                           </div>
                                       </div>
 
+
+                                      <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(testID)}>
+                                          <div className="col inside">
+                                          <img src={binance} class="img-thumbnail rounded mr-2 poa" alt="" /><div className="">Testnet</div>
+                                          </div>
+                                      </div>
+
                                    </div>
 
                                </div>
@@ -644,7 +761,7 @@ export default function Lockups(props) {
                                    <div className="connect">
                                      <div className="info">Connect Wallet</div>
                                      <div className="">
-                                        <button class="btn btn-outline-success my-2 my-sm-0 ms-auto">Connect wallet</button>
+                                        <button class="btn btn-outline-success my-2 my-sm-0 ms-auto"  onClick={() => props.getWalletAddress() } >Connect wallet</button>
                                      </div>
 
                                    </div>

@@ -16,6 +16,7 @@ function App() {
     const [signerAddress, setSignerAddress] = useState(undefined);
     const [chain, setChain] = useState();
     const [changed, setChanged] = useState(false);
+    const [approved, setApproved] = useState();
     //notification
     const [bg, setbg] = useState();
     const [message, setMessage] = useState();
@@ -25,6 +26,16 @@ function App() {
     const toggleShowA = () => {
       setShow(!show);
      }
+
+
+  //getWallet address
+  const getWalletAddress = () => {
+    signer.getAddress().
+    then(address => {
+      setSignerAddress(address)
+
+    })
+  }
 
 
     useEffect(() => {
@@ -69,6 +80,7 @@ function App() {
            setShow={setShow}
            message={message}
            setMessage={setMessage}
+           getWalletAddress={getWalletAddress}
           />
 
           <Routes>
@@ -90,6 +102,9 @@ function App() {
                 setShow={setShow}
                 message={message}
                 setMessage={setMessage}
+                approved={approved}
+                setApproved={setApproved}
+                getWalletAddress={getWalletAddress}
                />} />
           </Routes>
 
@@ -112,6 +127,9 @@ function App() {
                 setShow={setShow}
                 message={message}
                 setMessage={setMessage}
+                approved={approved}
+                setApproved={setApproved}
+                getWalletAddress={getWalletAddress}
                />} />
           </Routes>
 
@@ -135,6 +153,9 @@ function App() {
                 setShow={setShow}
                 message={message}
                 setMessage={setMessage}
+                approved={approved}
+                setApproved={setApproved}
+                getWalletAddress={getWalletAddress}
                />} />
           </Routes>
 
