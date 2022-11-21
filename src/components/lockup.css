@@ -178,11 +178,12 @@ Token
 
 .worktable .thead tr {
     background: rgba(0, 0, 0, 0.5) !important;
+    text-align: center;
 }
 
 .worktable tr {
    height: 54px !important;
-
+   text-align: center;
 }
 
 
@@ -206,8 +207,32 @@ Token
 }
 
 
+.header-text {
+    width: 100% !important;
+    margin: 0px;
+    margin-right: 0px;
+}
+
+
+.lockswitch-buttons {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+
 
 @media screen and (max-width: 600px) {
+
+    .lockswitch-buttons {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .header-text {
+        width: 100% !important;
+    }
 
     .addresscontainer {
         display: flex;
@@ -252,6 +277,11 @@ Token
 .containthem {
     width: 100%;
     height: 100%;
+}
+
+.viewhover:hover {
+    color: green;
+    cursor: pointer;
 }
 
 

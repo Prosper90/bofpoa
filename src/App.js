@@ -16,7 +16,7 @@ function App() {
     const [signerAddress, setSignerAddress] = useState(undefined);
     const [chain, setChain] = useState();
     const [changed, setChanged] = useState(false);
-    const [approved, setApproved] = useState();
+    const [approved, setApproved] = useState(undefined);
     //notification
     const [bg, setbg] = useState();
     const [message, setMessage] = useState();

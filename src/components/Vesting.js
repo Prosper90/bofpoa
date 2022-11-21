@@ -3,7 +3,7 @@ import videoplay from "../img/blgr.mp4";
 import Assetone from "../img/Asset21500.svg";
 import ethereum from "../img/ethereum.svg";
 import binance from "../img/binance.svg";
-import poa from "../img/poa.png";
+import poa from "../img/poalogo.png";
 import blank from "../img/balnk.webp";
 import wallet from "../img/vault.png";
 import "./lockup.css"
@@ -200,14 +200,14 @@ export default function Vesting(props) {
             const reformatamount = 2 ** 256 - 1;
     
             //approve
-            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.signer);
             console.log("setup ERC20TokenContract: ", ERC20TokenContract);
           
             // Grant the allowance target an allowance to spend our tokens.
             const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
 
             await tx.wait();
-            props.setApprove(tx);
+            props.setApproved(tx);
 
             } else {
 
@@ -215,14 +215,14 @@ export default function Vesting(props) {
             const reformatamount = ethers.utils.parseEther(amountget);
     
             //approve
-            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.signer);
             console.log("setup ERC20TokenContract: ", ERC20TokenContract);
           
             // Grant the allowance target an allowance to spend our tokens.
             const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
 
             await tx.wait();
-            props.setApprove(tx);
+            props.setApproved(tx);
 
             }
 
@@ -264,62 +264,48 @@ export default function Vesting(props) {
        if(chaincomp === ethchainID) {
         //amount
         const reformatamount = ethers.utils.parseEther(amount);
-
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-      
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
+        const convertdatetg = Math.floor(new Date(tgdate)/1000);
+        const convertdatecycle = Math.floor(new Date(cycledays)/1000);
 
           const contractInstance =  await getethContract();
-          const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
+          const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+          await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
         //amount
         const reformatamount = ethers.utils.parseEther(amount);
-
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve(bsccontractaddress, reformatamount);
+        const convertdatetg = Math.floor(new Date(tgdate)/1000);
+        const convertdatecycle = Math.floor(new Date(cycledays)/1000);
         
         const contractInstance =  await getbscContract();
-        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        await locking.wait();
      }
      else if(chaincomp === poachainID) {
         //amount
         const reformatamount = ethers.utils.parseEther(amount);
-        
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve(poacontractaddress, reformatamount);
+        const convertdatetg = Math.floor(new Date(tgdate)/1000);
+        const convertdatecycle = Math.floor(new Date(cycledays)/1000);
+
 
         const contractInstance =  await getpoaContract();
-        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        await locking.wait();
      }
      else if(chaincomp === testID) {
         //amount
         const reformatamount = ethers.utils.parseEther(amount);
-        
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve(testnetcontractaddress, reformatamount);
+        const convertdatetg = Math.floor(new Date(tgdate)/1000);
+        const convertdatecycle = Math.floor(new Date(cycledays)/1000);
+
 
         const contractInstance =  await gettestContract();
-        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, tgdate, tgBps, cycledays, cyclerelease, description);
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        await locking.wait();
      }
 
 
-     props.setApprove();
+     props.setApproved(undefined);
      
      props.setbg("success");
      props.setMessage("Token locked");
@@ -372,17 +358,13 @@ export default function Vesting(props) {
         });
 
         console.log(reformatamount);
-        
+        const convertdatetg = Math.floor(new Date(tgdate)/1000);
+        const convertdatecycle = Math.floor(new Date(cycledays)/1000);
 
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-      
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
 
           const contractInstance =  await getethContract();
-          const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
+          const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+          await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
         //amount
@@ -390,49 +372,43 @@ export default function Vesting(props) {
             ethers.utils.parseEther(data);
         });
 
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve(bsccontractaddress, reformatamount);
+        const convertdatetg = Math.floor(new Date(tgdate)/1000);
+        const convertdatecycle = Math.floor(new Date(cycledays)/1000);
         
         const contractInstance =  await getbscContract();
-        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        await locking.wait();
      }
      else if(chaincomp === poachainID) {
         //amount
         const reformatamount = amountput.map((data) => {
             ethers.utils.parseEther(data);
         });
-        
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve(poacontractaddress, reformatamount);
+        const convertdatetg = Math.floor(new Date(tgdate)/1000);
+        const convertdatecycle = Math.floor(new Date(cycledays)/1000);
+
 
         const contractInstance =  await getpoaContract();
-        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        await locking.wait();
      }
      else if(chaincomp === testID) {
         //amount
-        const reformatamount = ethers.utils.parseEther(amount);
-        
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve(testnetcontractaddress, reformatamount);
+        const reformatamount = amountput.map((data) => {
+            ethers.utils.parseEther(data);
+        });
+        const convertdatetg = Math.floor(new Date(tgdate)/1000);
+        const convertdatecycle = Math.floor(new Date(cycledays)/1000);
+
+
 
         const contractInstance =  await gettestContract();
-        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, tgdate, tgBps, cycledays, cyclerelease, description);
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        await locking.wait();
      }
 
 
-     props.setApprove();
+     props.setApproved(undefined);
      
      props.setbg("success");
      props.setMessage("Token Vested");
@@ -444,7 +420,7 @@ export default function Vesting(props) {
 
     useEffect(() => {
 
-    }, [props.chain])
+    }, [props.chain, props.approved])
 
 
   return (
@@ -842,7 +818,7 @@ export default function Vesting(props) {
 
                                             <div className="w-100 d-flex justify-content-center">
                                             
-                                            { props.approve ?
+                                            { props.approved ?
                                                 <button type="submit" className="btn btn-success">
                                                     Vest
                                                 </button>
@@ -879,7 +855,7 @@ export default function Vesting(props) {
                                             type="text"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            placeholder="token addresses"
+                                            placeholder="token address"
                                             name="tokenadd"
                                             value={tokenaddress}
                                             onChange={(e) => setTokenaddress(e.target.value)}
@@ -961,7 +937,7 @@ export default function Vesting(props) {
                                         
                                         <div className="w-100 d-flex justify-content-center">
 
-                                        { props.approve ?
+                                        { props.approved ?
                                                 <button type="submit" className="btn btn-success">
                                                     Vest
                                                 </button>
@@ -1004,13 +980,13 @@ export default function Vesting(props) {
 
                                         <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(poachainID)}>
                                             <div className="col inside">
-                                            <img src={poa} class="img-thumbnail rounded mr-2 poa" alt="" /><div className="">ProofofApes</div>
+                                               <img src={poa} class="img-thumbnail rounded mr-2" alt="" /><div className="">ProofofApes</div>
                                             </div>
                                         </div>
 
                                         <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(testID)}>
                                           <div className="col inside">
-                                          <img src={binance} class="img-thumbnail rounded mr-2 poa" alt="" /><div className="">Testnet</div>
+                                          <img src={binance} class="img-thumbnail rounded mr-2" alt="" /><div className="">Testnet</div>
                                           </div>
                                        </div>
 

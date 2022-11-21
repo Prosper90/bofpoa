@@ -3,7 +3,7 @@ import videoplay from "../img/blgr.mp4";
 import Assetone from "../img/Asset21500.svg";
 import ethereum from "../img/ethereum.svg";
 import binance from "../img/binance.svg";
-import poa from "../img/poa.png";
+import poa from "../img/poalogo.png";
 import blank from "../img/balnk.webp";
 import wallet from "../img/vault.png";
 import "./lockup.css"
@@ -184,62 +184,21 @@ export default function Lockups(props) {
 
         const chaincomp = await props.signer.getChainId();
 
-        if(chaincomp === ethchainID) {
             //amount
             const reformatamount = ethers.utils.parseEther(amountget);
     
             //approve
-            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
+            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.signer);
             console.log("setup ERC20TokenContract: ", ERC20TokenContract);
           
             // Grant the allowance target an allowance to spend our tokens.
             const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
 
             await tx.wait();
-            props.setApprove(tx);
-           } 
-           else if(chaincomp === bscchainID) {
-            //amount
-            const reformatamount = ethers.utils.parseEther(amountget);
-    
-            //approve
-            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
-            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-            
-            // Grant the allowance target an allowance to spend our tokens.
-            const tx = await ERC20TokenContract.approve(bsccontractaddress, reformatamount);
-            
-            await tx.wait();
-            props.setApprove(tx);
-         }
-         else if(chaincomp === poachainID) {
-            //amount
-            const reformatamount = ethers.utils.parseEther(amountget);
-            
-            //approve
-            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
-            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-            
-            // Grant the allowance target an allowance to spend our tokens.
-            const tx = await ERC20TokenContract.approve(poacontractaddress, reformatamount);
-    
-            await tx.wait();
-            props.setApprove(tx);
-         }
-         else if(chaincomp === testID) {
-            //amount
-            const reformatamount = ethers.utils.parseEther(amountget);
-            
-            //approve
-            const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.provider);
-            console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-            
-            // Grant the allowance target an allowance to spend our tokens.
-            const tx = await ERC20TokenContract.approve(testnetcontractaddress, reformatamount);
-    
-            await tx.wait();
-            props.setApprove(tx);
-         }
+            props.setApproved(tx);
+           
+            console.log("done");
+            console.log(props.approved);
       
      }
 
@@ -256,6 +215,8 @@ export default function Lockups(props) {
         //const check = e.target.check.value;
 
         console.log("checking", ischecked);
+        console.log(amount);
+        console.log(unlock);
 
         const chaincomp = await props.signer.getChainId();
 
@@ -273,62 +234,45 @@ export default function Lockups(props) {
        if(chaincomp === ethchainID) {
         //amount
         const reformatamount = ethers.utils.parseEther(amount);
-
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-      
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
+        const convertdate = Math.floor(new Date(unlock)/1000);
 
 
           const contractInstance =  await getethContract();
-          const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
+          const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description);
+          await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
         //amount
         const reformatamount = ethers.utils.parseEther(amount);
-
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve(bsccontractaddress, reformatamount);
+        const convertdate = Math.floor(new Date(unlock)/1000);
         
         const contractInstance =  await getbscContract();
-        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
+        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description);
+        await locking.wait();
      }
      else if(chaincomp === poachainID) {
         //amount
         const reformatamount = ethers.utils.parseEther(amount);
-        
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.approve(poacontractaddress, reformatamount);
+        const convertdate = Math.floor(new Date(unlock)/1000);
 
         const contractInstance =  await getpoaContract();
-        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
+        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description);
+        await locking.wait();
      }
      else if(chaincomp === testID) {
         //amount
         const reformatamount = ethers.utils.parseEther(amount);
-        
-        //approve
-        const ERC20TokenContract = new ethers.Contract(tokenadd, tokenAbi, props.provider);
-        console.log("setup ERC20TokenContract: ", ERC20TokenContract);
-        
-        // Grant the allowance target an allowance to spend our tokens.
-        await ERC20TokenContract.approve(testnetcontractaddress, reformatamount);
+        const convertdate = Math.floor(new Date(unlock)/1000);
+        console.log(reformatamount);
+        console.log(convertdate);
+
 
         const contractInstance =  await gettestContract();
-        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, unlock, description);
+        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description);
+        await locking.wait();
      }
 
-     props.setApprove();
+     props.setApproved();
      
      props.setbg("success");
      props.setMessage("Token locked");
@@ -344,7 +288,7 @@ export default function Lockups(props) {
 
     useEffect(() => {
 
-    }, [props.chain])
+    }, [props.chain, props.approved])
 
 
   return (
@@ -697,7 +641,7 @@ export default function Lockups(props) {
                                         
                                         <div className="w-100 d-flex justify-content-center">
 
-                                          { props.approve ? 
+                                          { props.approved !== undefined ? 
                                             <button type="submit" className="btn btn-success">
                                                 Lock
                                             </button>
@@ -734,14 +678,14 @@ export default function Lockups(props) {
 
                                       <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(poachainID)}>
                                           <div className="col inside">
-                                          <img src={poa} class="img-thumbnail rounded mr-2 poa" alt="" /><div className="">ProofofApes</div>
+                                          <img src={poa} class="img-thumbnail rounded mr-2" alt="" /><div className="">ProofofApes</div>
                                           </div>
                                       </div>
 
 
                                       <div className="col-xs-12 col-md-4 col-lg-4 chains" onClick={() => choose(testID)}>
                                           <div className="col inside">
-                                          <img src={binance} class="img-thumbnail rounded mr-2 poa" alt="" /><div className="">Testnet</div>
+                                          <img src={binance} class="img-thumbnail rounded mr-2" alt="" /><div className="">Testnet</div>
                                           </div>
                                       </div>
 

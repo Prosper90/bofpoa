@@ -18,7 +18,12 @@ export default function Tokens(props) {
 
     const [lockedTokens, setLockedTokens] = useState([]);
     const [lockswitch, setLockSwitch] = useState(false);
-    const [myownlock, setMyOwmLock] = useState();
+    const [myownlock, setMyOwmLock] = useState([]);
+    const [tokenNames, setTokenNames] = useState([]);
+    const [tokenSymb, setTokenSymb] = useState([]);
+
+    const [tokenNamesall, setTokenNamesall] = useState([]);
+    const [tokenSymball, setTokenSymball] = useState([]);
 
 
     const getethContract = async () => {
@@ -33,7 +38,7 @@ export default function Tokens(props) {
         //console.log("bad guy called");
         const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer =  temporalProvider.getSigner();
-        return new ethers.Contract(bsccontractaddress, ethcontractABI, signer);
+        return new ethers.Contract(bsccontractaddress, ethcontractABI, props.signer);
     }
 
 
@@ -41,7 +46,7 @@ export default function Tokens(props) {
         //console.log("bad guy called");
         const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer =  temporalProvider.getSigner();
-        return new ethers.Contract(poacontractaddress, ethcontractABI, signer);
+        return new ethers.Contract(poacontractaddress, ethcontractABI, props.signer);
     }
 
 
@@ -49,7 +54,7 @@ export default function Tokens(props) {
         //console.log("bad guy called");
         const temporalProvider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer =  temporalProvider.getSigner();
-        return new ethers.Contract(testnetcontractaddress, ethcontractABI, signer);
+        return new ethers.Contract(testnetcontractaddress, ethcontractABI, props.signer);
     }
 
 
@@ -66,63 +71,116 @@ export default function Tokens(props) {
             return;
         }
         
-        
+        console.log("Entered the get all token");
+
+        const chaincomp = await props.signer.getChainId();
+
+
+        if(chaincomp === ethchainID) { 
         const contractInstanceone =  await getethContract();
         const ethTokencount = await contractInstanceone.getTotalLockCount();
 
-        const contractInstancetwo =  await getbscContract();
-        const bscTokencount = await contractInstancetwo.getTotalLockCount();
-
-        const contractInstancethree =  await getpoaContract();
-        const poaTokencount = await contractInstancethree.getTotalLockCount();
-
-        const contractInstancefour =  await gettestContract();
-        const testTokencount = await contractInstancethree.getTotalLockCount();
-
-        console.log(testTokencount);
-        
-
-        //temp arrs
         const etharr = [];
-        const bscarr = [];
-        const poaarr = [];
-        const testarr = [];
 
-         //for eth
+        //for eth
         for (let index = 0; index < ethTokencount; index++) {
             const tokens = await contractInstanceone.getLockAt(index);
             etharr.push(tokens);
         }
 
 
-        //for bsc
-        for (let index = 0; index < bscTokencount; index++) {
-            const tokens = await contractInstancetwo.getLockAt(index);
-            bscarr.push(tokens);
-        }
-
-
-
-        //for poa
-        for (let index = 0; index < poaTokencount; index++) {
-            const tokens = await contractInstancethree.getLockAt(index);
-            poaarr.push(tokens);
-        }
-
-        //for test
-        for (let index = 0; index < testTokencount; index++) {
-            console.log("inside here")
-            const tokens = await contractInstancefour.getLockAt(index);
-            testarr.push(tokens);
-        }      
-
-
         setTimeout(() => {
             console.log("All wrapped up setTimeOut market");
-            setLockedTokens(lockedTokens => [...lockedTokens, ...etharr, ...bscarr,  ...poaarr, ...testarr]);
-          }, 3000);
+            setLockedTokens(etharr);
+          }, 1000);
+
+
+        } else if(chaincomp === bscchainID) {
+            const contractInstancetwo =  await getbscContract();
+            const bscTokencount = await contractInstancetwo.getTotalLockCount();
+
+            const bscarr = [];
+
+
+            //for bsc
+            for (let index = 0; index < bscTokencount; index++) {
+                const tokens = await contractInstancetwo.getLockAt(index);
+                bscarr.push(tokens);
+            }
+
+          setTimeout(() => {
+            console.log("All wrapped up setTimeOut market");
+            setLockedTokens(bscarr);
+            }, 1000);    
+        
+        } else if(chaincomp === poachainID) {
+
+            const contractInstancethree =  await getpoaContract();
+            const poaTokencount = await contractInstancethree.getTotalLockCount();
+            
+            const poaarr = [];
+
+            //for poa
+            for (let index = 0; index < poaTokencount; index++) {
+                const tokens = await contractInstancethree.getLockAt(index);
+                poaarr.push(tokens);
+            }
+
+            setTimeout(() => {
+                console.log("All wrapped up setTimeOut market");
+                setLockedTokens(poaarr);
+             }, 1000);  
+
+        } else if(chaincomp === testID) { 
+        
+            console.log("Finding the error got here")
+            const contractInstancefour =  await gettestContract();
+            const testTokencount = await contractInstancefour.getTotalLockCount();
+
+            //temp arrs
+            const testarr = [];
+
+
+            //for test
+            for (let index = 0; index < testTokencount; index++) {
+                console.log("inside here")
+                const tokens = await contractInstancefour.getLockAt(index);
+                testarr.push(tokens);
+            }      
+
+
+            setTimeout(() => {
+                console.log("All wrapped up setTimeOut market");
+                setLockedTokens(testarr);
+            }, 1000);
+
+        }
 
     }
+
+
+
+    //get token name
+    const getname = async (address) => {
+        //console.log(address);
+        //instantiate contract
+        const ERC20TokenContract = new ethers.Contract(address, tokenAbi, props.signer);
+
+        // Grant the allowance target an allowance to spend our tokens.
+        let tx = await ERC20TokenContract.name();
+        return tx;
+
+    }
+  
+   //get token symbol
+    const getsymbol = async (address) => {
+        //instantiate contract
+        const ERC20TokenContract = new ethers.Contract(address, tokenAbi, props.signer);
+        
+        // Grant the allowance target an allowance to spend our tokens.
+        const tx = await ERC20TokenContract.symbol();
+        return tx;
+     }
 
 
     //get my locks 
@@ -144,30 +202,80 @@ export default function Tokens(props) {
             const contractInstance =  await getethContract();
             const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
             const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
-            setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
+
+            if(mylocks.length !== 0 && lplocks.length === 0) {
+                setMyOwmLock([mylocks]);
+            } else if(lplocks.length !== 0 && mylocks.length === 0) {
+                setMyOwmLock([lplocks]);
+            } else if(mylocks.length === 0 && lplocks.length === 0){
+                setMyOwmLock([]);
+            } else {
+                setMyOwmLock([...mylocks, ...lplocks]);
+            }
+
         }
         else if(chaincomp === bscchainID) {
             const contractInstance =  await getbscContract();
             const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
             const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
-            setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
+
+            if(mylocks.length !== 0 && lplocks.length === 0) {
+                setMyOwmLock([mylocks]);
+            } else if(lplocks.length !== 0 && mylocks.length === 0) {
+                setMyOwmLock([lplocks]);
+            } else if(mylocks.length === 0 && lplocks.length === 0){
+                setMyOwmLock([]);
+            } else {
+                setMyOwmLock([...mylocks, ...lplocks]);
+            }
+
         }
         else if(chaincomp === poachainID) {
             const contractInstance =  await getpoaContract();
             const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
             const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
-            setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
+
+            if(mylocks.length !== 0 && lplocks.length === 0) {
+                setMyOwmLock([mylocks]);
+            } else if(lplocks.length !== 0 && mylocks.length === 0) {
+                setMyOwmLock([lplocks]);
+            } else if(mylocks.length === 0 && lplocks.length === 0){
+                setMyOwmLock([]);
+            } else {
+                setMyOwmLock([...mylocks, ...lplocks]);
+            }
         }
         else if(chaincomp === testID) {
+            
             const contractInstance =  await gettestContract();
+            //console.log(contractInstance);
             const mylocks = await contractInstance.normalLocksForUser(props.signerAddress);
             const lplocks = await contractInstance.lpLocksForUser(props.signerAddress);
-            console.log(mylocks);
-            console.log(lplocks);
-            //setMyOwmLock(myownlock => [...myownlock, ...mylocks, lplocks]);
+            //console.log(mylocks);
+            //console.log(lplocks);
+            //setMyOwmLock([mylocks]);
+            
+            if(mylocks.length !== 0 && lplocks.length === 0) {
+                setMyOwmLock([mylocks]);
+            } else if(lplocks.length !== 0 && mylocks.length === 0) {
+                setMyOwmLock([lplocks]);
+            } else if(mylocks.length === 0 && lplocks.length === 0){
+                setMyOwmLock([]);
+            } else {
+                setMyOwmLock([...mylocks, ...lplocks]);
+            }
+            
+           console.log("Inside testnet");
         }
         
     }
+
+
+    const all = () => {
+        setLockSwitch(false);
+    }
+
+
 
 
 
@@ -175,8 +283,42 @@ export default function Tokens(props) {
         useEffect(() => {
             
             getTokens();
+            console.log(lockedTokens);
 
-        }, [props.signerAddress]);
+            if(myownlock) {
+                const temparr = [];
+                const symbtemp = [];
+                myownlock[0]?.map( async (data) => {
+                    const name = await getname(data.token);
+                    const symbol = await getsymbol(data.token);
+                     temparr.push(name);
+                     symbtemp.push(symbol);
+                })
+                setTimeout(() => {
+                    setTokenNames(temparr);
+                    setTokenSymb(symbtemp);
+                }, 1000);
+            }
+
+
+            if(lockedTokens) {
+                console.log("Locked tokens all running")
+                const temparr = [];
+                const symbtemp = [];
+                lockedTokens?.map( async (data) => {
+                    const name = await getname(data.token);
+                    const symbol = await getsymbol(data.token);
+                     temparr.push(name);
+                     symbtemp.push(symbol);
+                })
+                setTimeout(() => {
+                    setTokenNamesall(temparr);
+                    setTokenSymball(symbtemp);
+                }, 1000);
+            }
+
+
+        }, [props.signerAddress, myownlock]);
 
 
 
@@ -406,11 +548,20 @@ export default function Tokens(props) {
                                 className="n2-ss-layer-row-inner "
                                 style={{ perspective: 1000 }}
                                 >
+        
+                                <div className="w-100 d-flex flex-column flex-lg-row justify-content-between">
+                                     
+                                    <div className="w-100">
+                                        <h3  className='text-white header-text'> { !lockswitch ?  "All Tokens for" : "Your Locked for" } {props.chain === 1 ? 'Ethereum' : props.chain === 56 ? 'Binance' : props.chain === 493 ? 'ProofofApes' : 'Binance Testnet' }. </h3>
+                                    </div>
 
+                                    <div className="lockswitch-buttons">
+                                    <button className={ !lockswitch ? "btn btn-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0"} onClick={all}>All</button>
 
-                                <div className="w-100 d-flex justify-content-end">
-                                  <button className={lockswitch ? "btn btn-success my-2 my-sm-0 ms-auto" : "btn btn-outline-success my-2 my-sm-0 ms-auto"} onClick={mylocks}>My locks</button>
-                                </div>
+                                    <button className={lockswitch ? "btn btn-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0"} style={{marginLeft: '10px'}} onClick={mylocks}>My locks</button>
+                                    </div>
+
+                               </div>
 
                                 </div>
                             </div>
@@ -430,51 +581,38 @@ export default function Tokens(props) {
                             <div className="containthem">
                                 {/* here */}
 
-                                <div className="tablecontain table-responsive">
+                                <div className="tablecontain">
                                     <table className="table worktable">
                                     <thead className='thead'>
                                         <tr>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Blockchain</th>
-                                        <th scope="col">Liquidity locked</th>
-                                        <th scope="col">Tokens Locked</th>
-                                        <th scope="col">Value Locked</th>
-                                        <th scope="col">Next unlocked</th>
+                                        <th scope="col">Amount</th>
                                         <th scope="col">Action</th>
                                         </tr>
                                     </thead>
 
-                                    {props.signerAddress &&
+                                    {props.signerAddress !== undefined &&
                                     <>
-                                    {lockswitch ?
+                                    { !lockswitch ?
 
                                         <tbody>
-                                        {lockedTokens?.map((data, index) => {
+                                        {lockedTokens?.map((data, index) => (
                                             <tr className='trfix' key={index}>
-                                            <th scope="row">{data.id}</th>
-                                            <td>Mark</td>
-                                            <td>{data.tgeBps}</td>
-                                            <td>{ethers.utils.parseEther(data.amount)}</td>
-                                            <td>${ethers.utils.parseEther(data.unlockedAmount)}</td>
-                                            <td>{data.cycle}</td>
-                                            <td>view</td>
+                                            <td scope="row">{tokenNamesall[index]}</td>
+                                            <td>{ (Math.round(data?.amount/10 ** 18) * 10 ) / 10 } {tokenSymball[index]} </td>
+                                            <td className='viewhover' >view</td>
                                             </tr>
-                                        })}
+                                        ))}
                                         </tbody>
-
                                         :
                                         <tbody>
-                                        {myownlock?.map((data, index) => {
+                                        { myownlock[0]?.map((data, index) => (
                                             <tr className='trfix' key={index}>
-                                            <th scope="row">{data.id}</th>
-                                            <td>Mark</td>
-                                            <td>{data.tgeBps}</td>
-                                            <td>{ethers.utils.parseEther(data.amount)}</td>
-                                            <td>${ethers.utils.parseEther(data.unlockedAmount)}</td>
-                                            <td>{data.cycle}</td>
-                                            <td>view</td>
+                                            <td scope="row">{tokenNames[index]}</td>
+                                            <td>{ (Math.round(data?.amount/10 ** 18) * 10 ) / 10 } {tokenSymb[index]} </td>
+                                            <td className='viewhover' >view</td>
                                             </tr>
-                                        })}
+                                        ))}
                                         </tbody>
                                      }
                                     </>

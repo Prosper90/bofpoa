@@ -4,7 +4,7 @@ import bofapes from "../../img/bofapes1500.png";
 import vault from "../../img/dapplockericon.png";
 import ethereum from "../../img/ethereum.svg";
 import binance from "../../img/binance.svg";
-import poa from "../../img/poa.png";
+import poa from "../../img/poalogo.png";
 import 'bootstrap/dist/css/bootstrap.css';
 import { ethers } from 'ethers';
 import { useParams, useRouteMatch, useNavigate } from 'react-router-dom';
@@ -45,9 +45,7 @@ const vest = () => {
    const value =  props.signer !== undefined;
    console.log(value);
    return value;
-  } 
-
-  console.log(isConnected);
+  }
 
 
 
@@ -87,8 +85,6 @@ const vest = () => {
     const onLoad = async () => {
       const provider = await new ethers.providers.Web3Provider(window.ethereum);
       props.setProvider(provider);
-      console.log("ran through");
-                
   }
 
 
