@@ -384,11 +384,9 @@ export default function Tokens(props) {
                 })
                 console.log(decitemps);
                 console.log(symbtemp)
-                setTimeout(() => {
                     setTokenNames(temparr);
                     setTokenSymb(symbtemp);
                     setTokenDecimal(decitemps);
-                }, 1000);
             }
 
 
@@ -405,11 +403,9 @@ export default function Tokens(props) {
                      symbtemp.push(symbol);
                      decitemps.push(decimals);
                 })
-                setTimeout(() => {
                     setTokenNamesall(temparr);
                     setTokenSymball(symbtemp);
                     setTokenDecimalall(decitemps);
-                }, 1000);
             }
 
 
