@@ -268,7 +268,8 @@ export default function Vesting(props) {
         const convertdatecycle = Math.floor(new Date(cycledays)/1000);
 
           const contractInstance =  await getethContract();
-          const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+          const fees = await contractInstance.vaultFee();
+          const locking = await contractInstance.vestingLock(fees, owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
           await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
@@ -278,7 +279,8 @@ export default function Vesting(props) {
         const convertdatecycle = Math.floor(new Date(cycledays)/1000);
         
         const contractInstance =  await getbscContract();
-        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const fees = await contractInstance.vaultFee();
+        const locking = await contractInstance.vestingLock(fees, owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
         await locking.wait();
      }
      else if(chaincomp === poachainID) {
@@ -289,7 +291,8 @@ export default function Vesting(props) {
 
 
         const contractInstance =  await getpoaContract();
-        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const fees = await contractInstance.vaultFee();
+        const locking = await contractInstance.vestingLock(fees, owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
         await locking.wait();
      }
      else if(chaincomp === testID) {
@@ -363,7 +366,8 @@ export default function Vesting(props) {
 
 
           const contractInstance =  await getethContract();
-          const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+          const fees = await contractInstance.vaultFee();
+          const locking = await contractInstance.multipleVestingLock(fees, ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
           await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
@@ -376,7 +380,8 @@ export default function Vesting(props) {
         const convertdatecycle = Math.floor(new Date(cycledays)/1000);
         
         const contractInstance =  await getbscContract();
-        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const fees = await contractInstance.vaultFee();
+        const locking = await contractInstance.multipleVestingLock(fees, ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
         await locking.wait();
      }
      else if(chaincomp === poachainID) {
@@ -389,7 +394,8 @@ export default function Vesting(props) {
 
 
         const contractInstance =  await getpoaContract();
-        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const fees = await contractInstance.vaultFee();
+        const locking = await contractInstance.multipleVestingLock(fees, ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
         await locking.wait();
      }
      else if(chaincomp === testID) {

@@ -118,12 +118,21 @@ const vest = () => {
           window.ethereum.on('chainChanged', function (chainId) {
             //account = accounts[0];
             onLoad();
-            console.log("changed");
             getSigner(props.provider);
             props.getWalletAddress();
             getChain();
         });
      }
+
+       //on account changed
+  if(window.ethereum){
+
+    window.ethereum.on('accountsChanged', function (accounts) {
+      // Time to reload your interface with accounts[0]!
+      props.getWalletAddress();
+    });
+  
+  }
 
 
 

@@ -238,7 +238,8 @@ export default function Lockups(props) {
 
 
           const contractInstance =  await getethContract();
-          const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description);
+          const fees = await contractInstance.vaultFee();
+          const locking = await contractInstance.lock( fees, owner, tokenadd, ischecked, reformatamount, convertdate, description);
           await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
@@ -247,7 +248,8 @@ export default function Lockups(props) {
         const convertdate = Math.floor(new Date(unlock)/1000);
         
         const contractInstance =  await getbscContract();
-        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description);
+        const fees = await contractInstance.vaultFee();
+        const locking = await contractInstance.lock( fees, owner, tokenadd, ischecked, reformatamount, convertdate, description);
         await locking.wait();
      }
      else if(chaincomp === poachainID) {
@@ -256,7 +258,8 @@ export default function Lockups(props) {
         const convertdate = Math.floor(new Date(unlock)/1000);
 
         const contractInstance =  await getpoaContract();
-        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description);
+        const fees = await contractInstance.vaultFee();
+        const locking = await contractInstance.lock( fees, owner, tokenadd, ischecked, reformatamount, convertdate, description);
         await locking.wait();
      }
      else if(chaincomp === testID) {

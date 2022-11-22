@@ -53,6 +53,20 @@
 }
 
 
+.border-containerfive {
+    width: 100%;
+    border: 1px solid green;
+    border-radius: 5px;
+    padding: 30px;
+    /* display: flex; */
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    height: 356px;
+    color: #FFFF;
+}
+
 
 
 .inside {

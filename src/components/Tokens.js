@@ -6,6 +6,7 @@ import bofapes from "../img/bofapes1500.png";
 import "./lockup.css";
 import { ethers } from 'ethers';
 import wallet from "../img/vault.png";
+import { useNavigate } from 'react-router-dom';
 import { testnetcontractaddress, tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID, testID } from '../utils/constants';
 
 
@@ -15,15 +16,28 @@ import { testnetcontractaddress, tokenAbi, ethcontractABI, ethcontractaddress, b
 
 export default function Tokens(props) {
 
-
+          /* global BigInt */
+    const navigate = useNavigate();
     const [lockedTokens, setLockedTokens] = useState([]);
     const [lockswitch, setLockSwitch] = useState(false);
     const [myownlock, setMyOwmLock] = useState([]);
+
+    //erc20 token info
     const [tokenNames, setTokenNames] = useState([]);
     const [tokenSymb, setTokenSymb] = useState([]);
+    const [tokendecimal, setTokenDecimal] = useState([]);
+    
 
+    //erc20 tokeninfo all
     const [tokenNamesall, setTokenNamesall] = useState([]);
     const [tokenSymball, setTokenSymball] = useState([]);
+    const [tokenDecimalall, setTokenDecimalall] = useState([]);
+
+    //view more
+    const [viewbool, setViewbool] = useState(false);
+    const [viewdata, setViewData] = useState();
+    const [viewindex, setViewIndex] = useState();
+
 
 
     const getethContract = async () => {
@@ -181,6 +195,16 @@ export default function Tokens(props) {
         const tx = await ERC20TokenContract.symbol();
         return tx;
      }
+    
+    //get token decimal
+    const getdecimal = async (address) => {
+        //instantiate contract
+        const ERC20TokenContract = new ethers.Contract(address, tokenAbi, props.signer);
+        
+        // Grant the allowance target an allowance to spend our tokens.
+        const tx = await ERC20TokenContract.decimals();
+        return tx;
+     }
 
 
     //get my locks 
@@ -194,6 +218,7 @@ export default function Tokens(props) {
             return;
         }
         console.log("Here Testing");
+        setViewbool(false);
         setLockSwitch(true);
 
         const chaincomp = await props.signer.getChainId();
@@ -265,17 +290,76 @@ export default function Tokens(props) {
                 setMyOwmLock([...mylocks, ...lplocks]);
             }
             
-           console.log("Inside testnet");
         }
         
     }
 
 
     const all = () => {
+        setViewbool(false);
         setLockSwitch(false);
     }
 
 
+
+
+
+    const viewmore = (data, index) => {
+       setViewbool(true);
+       setViewData(data);
+       setViewIndex(index);
+    }
+
+
+    const getDate = (ama) => {
+
+        const dateama = new Date( parseInt(ama) );
+  
+        const timeString = dateama.toUTCString().split(" ")[4]; //This will return your 17:50:00
+        //For the date string part of it
+        const dateNumber = dateama.getDate();
+        const monthNumber = dateama.getMonth() + 1;
+        const yearNumber = dateama.getFullYear();
+        const dateString = `${dateNumber}/${monthNumber}/${yearNumber}`;
+        const finalDateString = [dateString, timeString].join(" ");
+        return finalDateString;
+    
+     }
+
+     const lockup = () => {
+        navigate(`/Lockups`);
+      }
+      
+
+
+    const unlock = async (data) => {
+
+        const chaincomp = await props.signer.getChainId();
+        
+        if(chaincomp === ethchainID) {
+            const contractInstance =  await getethContract();
+            const unlock = await contractInstance.unlock(data.id);
+            await unlock.wait();
+        }
+        else if(chaincomp === bscchainID) {
+            const contractInstance =  await getbscContract();
+            const unlock = await contractInstance.unlock(data.id);
+            await unlock.wait();
+
+        }
+        else if(chaincomp === poachainID) {
+            const contractInstance =  await getpoaContract();
+            const unlock = await contractInstance.unlock(data.id);
+            await unlock.wait();
+        }
+        else if(chaincomp === testID) {
+            
+            const contractInstance =  await gettestContract();
+            const unlock = await contractInstance.unlock(data.id);
+            await unlock.wait();
+            
+        }
+    }
 
 
 
@@ -286,17 +370,24 @@ export default function Tokens(props) {
             console.log(lockedTokens);
 
             if(myownlock) {
+                console.log("example started");
                 const temparr = [];
                 const symbtemp = [];
+                const decitemps = [];
                 myownlock[0]?.map( async (data) => {
                     const name = await getname(data.token);
                     const symbol = await getsymbol(data.token);
+                    const decimals = await getdecimal(data.token);
                      temparr.push(name);
                      symbtemp.push(symbol);
+                     decitemps.push(decimals);
                 })
+                console.log(decitemps);
+                console.log(symbtemp)
                 setTimeout(() => {
                     setTokenNames(temparr);
                     setTokenSymb(symbtemp);
+                    setTokenDecimal(decitemps);
                 }, 1000);
             }
 
@@ -305,15 +396,19 @@ export default function Tokens(props) {
                 console.log("Locked tokens all running")
                 const temparr = [];
                 const symbtemp = [];
+                const decitemps = [];
                 lockedTokens?.map( async (data) => {
                     const name = await getname(data.token);
                     const symbol = await getsymbol(data.token);
+                    const decimals = await getdecimal(data.token);
                      temparr.push(name);
                      symbtemp.push(symbol);
+                     decitemps.push(decimals);
                 })
                 setTimeout(() => {
                     setTokenNamesall(temparr);
                     setTokenSymball(symbtemp);
+                    setTokenDecimalall(decitemps);
                 }, 1000);
             }
 
@@ -552,7 +647,7 @@ export default function Tokens(props) {
                                 <div className="w-100 d-flex flex-column flex-lg-row justify-content-between">
                                      
                                     <div className="w-100">
-                                        <h3  className='text-white header-text'> { !lockswitch ?  "All Tokens for" : "Your Locked for" } {props.chain === 1 ? 'Ethereum' : props.chain === 56 ? 'Binance' : props.chain === 493 ? 'ProofofApes' : 'Binance Testnet' }. </h3>
+                                        <h3  className='text-white header-text'> { !lockswitch ?  "All Tokens for" : "Your Locked for" } {props.chain === 1 ? 'Ethereum' : props.chain === 56 ? 'Binance' : props.chain === 493 ? 'ProofofApes' : 'Binance Testnet'}. </h3>
                                     </div>
 
                                     <div className="lockswitch-buttons">
@@ -580,7 +675,7 @@ export default function Tokens(props) {
 
                             <div className="containthem">
                                 {/* here */}
-
+                              {!viewbool ? 
                                 <div className="tablecontain">
                                     <table className="table worktable">
                                     <thead className='thead'>
@@ -600,7 +695,7 @@ export default function Tokens(props) {
                                             <tr className='trfix' key={index}>
                                             <td scope="row">{tokenNamesall[index]}</td>
                                             <td>{ (Math.round(data?.amount/10 ** 18) * 10 ) / 10 } {tokenSymball[index]} </td>
-                                            <td className='viewhover' >view</td>
+                                            <td className='viewhover' onClick={ () => viewmore(data, index)} >view</td>
                                             </tr>
                                         ))}
                                         </tbody>
@@ -610,7 +705,7 @@ export default function Tokens(props) {
                                             <tr className='trfix' key={index}>
                                             <td scope="row">{tokenNames[index]}</td>
                                             <td>{ (Math.round(data?.amount/10 ** 18) * 10 ) / 10 } {tokenSymb[index]} </td>
-                                            <td className='viewhover' >view</td>
+                                            <td className='viewhover' onClick={ () => viewmore(data, index)} >view</td>
                                             </tr>
                                         ))}
                                         </tbody>
@@ -620,6 +715,42 @@ export default function Tokens(props) {
 
                                     </table>
                                 </div>
+                                :
+                                <div className="border-containerfive">
+
+
+                                 <div className="row">
+                                    <h4 className="header mb-4 text-warning">Lock info</h4>
+
+                                    <div className="col-6 d-flex flex-column gap-3 align-items-start text-white">
+                                       <div className="info">Current Locked Amount</div>
+                                       <div className="info">Token Address</div>
+                                       <div className="info">Token Name</div>
+                                       <div className="info">Token Symbol</div>
+                                       <div className="info">Token Decimals</div>
+                                       <div className="info">Unlock time(UTC)</div>
+                                    </div>
+
+                                    <div className="col-6 d-flex flex-column gap-3 align-items-end text-white">
+                                      <div className="infoleft">{ (Math.round(viewdata?.amount/10 ** 18) * 10 ) / 10 } {tokenSymball[viewindex]}</div>
+                                      <div className="infoleft">{viewdata.token}</div>
+                                      <div className="infoleft">{ !lockswitch ? tokenNamesall[viewindex] : tokenNames[viewindex] }</div>
+                                      <div className="infoleft">{ !lockswitch ? tokenSymball[viewindex] : tokenSymb[viewindex]}</div>
+                                      <div className="infoleft">{ !lockswitch ? tokenDecimalall[viewindex] : tokendecimal[viewindex]}</div>
+                                      <div className="infoledt">{getDate(viewdata.lockDate)}</div>
+                                    </div>
+                                 </div>
+                                   {lockswitch &&
+                                        <div className="d-flex justify-content-center align-items-center w-100 mt-3">
+                                            <button className="btn btn-outline-success my-2 my-sm-0"onClick={ () => unlock(viewdata) } >unlock</button>
+                                        </div>
+                                   }
+
+                                 </div>
+
+                                 }
+
+                                   
                                     {!props.signerAddress && 
 
                                         <div className="border-container">
@@ -637,6 +768,44 @@ export default function Tokens(props) {
                                             </div>
 
                                         </div>
+                                    }
+                                    
+                                    { !lockswitch ?
+
+                                     <>
+                                       { lockedTokens?.length === 0 && 
+
+                                          <div className="border-container">
+                                                        
+
+                                                <div className="connect">
+                                                   <h3 className="info">There are no locks on {props.chain === 1 ? 'Ethereum' : props.chain === 56 ? 'Binance' : props.chain === 493 ? 'ProofofApes' : 'Binance Testnet'}</h3>
+
+                                                </div>
+
+                                          </div>
+                                        }
+                                     </>
+                                     :
+                                     <>
+                                        { lockswitch && myownlock?.length === 0 && 
+
+                                            <div className="border-container">
+                                                        
+
+                                                <div className="connect">
+                                                <h3 className="info">You have no locked tokens</h3>
+                                                <div className="">
+                                                <button class="btn btn-outline-success my-2 my-sm-0 ms-auto" onClick={lockup } >go to locks</button>
+                                                </div>
+
+                                                </div>
+
+                                            </div>
+
+                                            }
+                                     </>
+
                                     }
 
                                 {/* here */}

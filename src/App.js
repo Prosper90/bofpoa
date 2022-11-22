@@ -105,6 +105,7 @@ function App() {
                 approved={approved}
                 setApproved={setApproved}
                 getWalletAddress={getWalletAddress}
+                chain={chain}
                />} />
           </Routes>
 
