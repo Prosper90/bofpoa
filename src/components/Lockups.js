@@ -191,6 +191,7 @@ export default function Lockups(props) {
             const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.signer);
             console.log("setup ERC20TokenContract: ", ERC20TokenContract);
           
+            if(chaincomp === ethchainID) {
             // Grant the allowance target an allowance to spend our tokens.
             const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
 
@@ -199,6 +200,30 @@ export default function Lockups(props) {
            
             console.log("done");
             console.log(props.approved);
+            }
+            else if(chaincomp === bscchainID) {
+              // Grant the allowance target an allowance to spend our tokens.
+              const tx = await ERC20TokenContract.approve( bsccontractaddress, reformatamount);
+
+              await tx.wait();
+              props.setApproved(tx);
+
+            }
+            else if(chaincomp === poachainID) { 
+              // Grant the allowance target an allowance to spend our tokens.
+              const tx = await ERC20TokenContract.approve( poacontractaddress, reformatamount);
+
+              await tx.wait();
+              props.setApproved(tx);
+
+            }
+            else if(chaincomp === testID) {
+              // Grant the allowance target an allowance to spend our tokens.
+              const tx = await ERC20TokenContract.approve( testnetcontractaddress, reformatamount);
+
+              await tx.wait();
+              props.setApproved(tx);
+            }
       
      }
 
@@ -239,7 +264,7 @@ export default function Lockups(props) {
 
           const contractInstance =  await getethContract();
           const fees = await contractInstance.vaultFee();
-          const locking = await contractInstance.lock( fees, owner, tokenadd, ischecked, reformatamount, convertdate, description);
+          const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
           await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
@@ -249,7 +274,7 @@ export default function Lockups(props) {
         
         const contractInstance =  await getbscContract();
         const fees = await contractInstance.vaultFee();
-        const locking = await contractInstance.lock( fees, owner, tokenadd, ischecked, reformatamount, convertdate, description);
+        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
      else if(chaincomp === poachainID) {
@@ -259,7 +284,7 @@ export default function Lockups(props) {
 
         const contractInstance =  await getpoaContract();
         const fees = await contractInstance.vaultFee();
-        const locking = await contractInstance.lock( fees, owner, tokenadd, ischecked, reformatamount, convertdate, description);
+        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description , {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
      else if(chaincomp === testID) {
@@ -271,7 +296,10 @@ export default function Lockups(props) {
 
 
         const contractInstance =  await gettestContract();
-        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description);
+        const fees = await contractInstance.vaultFee();
+        console.log(fees, "fees ooo");
+        console.log(ethers.BigNumber.from(fees));
+        const locking = await contractInstance.lock(owner, tokenadd, ischecked, reformatamount, convertdate, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
 
@@ -574,7 +602,7 @@ export default function Lockups(props) {
 
                                     <form class="w-100" onSubmit={lock}>
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputEmail1 text-dark">Owner address</label>
+                                            <label htmlFor="exampleInputEmail1" style={{color: '#000', marginBottom: '10px'}}>Owner address</label>
                                             <input
                                             type="text"
                                             className="form-control"
@@ -588,7 +616,7 @@ export default function Lockups(props) {
                                             </small>
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputPassword1 text-dark">Token address</label>
+                                            <label htmlFor="exampleInputPassword1 text-dark" style={{color: '#000', marginBottom: '10px'}} >Token address</label>
                                             <input
                                             type="text"
                                             className="form-control"
@@ -601,7 +629,7 @@ export default function Lockups(props) {
                                         </div>
 
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputPassword1 text-dark">amount</label>
+                                            <label htmlFor="exampleInputPassword1 text-dark" style={{color: '#000', marginBottom: '10px'}} >amount</label>
                                             <input
                                             type="number"
                                             className="form-control"
@@ -614,7 +642,7 @@ export default function Lockups(props) {
                                         </div>
 
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputPassword1 text-dark">unlock date</label>
+                                            <label htmlFor="exampleInputPassword1 text-dark" style={{color: '#000', marginBottom: '10px'}} >unlock date</label>
                                             <input
                                             type="datetime-local"
                                             className="form-control"
@@ -625,7 +653,7 @@ export default function Lockups(props) {
                                         </div>
 
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputPassword1 text-dark">description</label>
+                                            <label htmlFor="exampleInputPassword1 text-dark" style={{color: '#000', marginBottom: '10px'}} >description</label>
                                             <input
                                             type="text"
                                             className="form-control"

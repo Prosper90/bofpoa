@@ -203,11 +203,37 @@ export default function Vesting(props) {
             const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.signer);
             console.log("setup ERC20TokenContract: ", ERC20TokenContract);
           
-            // Grant the allowance target an allowance to spend our tokens.
-            const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
-
-            await tx.wait();
-            props.setApproved(tx);
+            if(chaincomp === ethchainID) {
+                // Grant the allowance target an allowance to spend our tokens.
+                const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
+    
+                await tx.wait();
+                props.setApproved(tx);
+               
+                }
+                else if(chaincomp === bscchainID) {
+                  // Grant the allowance target an allowance to spend our tokens.
+                  const tx = await ERC20TokenContract.approve( bsccontractaddress, reformatamount);
+    
+                  await tx.wait();
+                  props.setApproved(tx);
+    
+                }
+                else if(chaincomp === poachainID) { 
+                  // Grant the allowance target an allowance to spend our tokens.
+                  const tx = await ERC20TokenContract.approve( poacontractaddress, reformatamount);
+    
+                  await tx.wait();
+                  props.setApproved(tx);
+    
+                }
+                else if(chaincomp === testID) {
+                  // Grant the allowance target an allowance to spend our tokens.
+                  const tx = await ERC20TokenContract.approve( testnetcontractaddress, reformatamount);
+    
+                  await tx.wait();
+                  props.setApproved(tx);
+                }
 
             } else {
 
@@ -218,11 +244,37 @@ export default function Vesting(props) {
             const ERC20TokenContract = new ethers.Contract(tokenaddress, tokenAbi, props.signer);
             console.log("setup ERC20TokenContract: ", ERC20TokenContract);
           
-            // Grant the allowance target an allowance to spend our tokens.
-            const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
-
-            await tx.wait();
-            props.setApproved(tx);
+            if(chaincomp === ethchainID) {
+                // Grant the allowance target an allowance to spend our tokens.
+                const tx = await ERC20TokenContract.approve( ethcontractaddress, reformatamount);
+    
+                await tx.wait();
+                props.setApproved(tx);
+               
+                }
+                else if(chaincomp === bscchainID) {
+                  // Grant the allowance target an allowance to spend our tokens.
+                  const tx = await ERC20TokenContract.approve( bsccontractaddress, reformatamount);
+    
+                  await tx.wait();
+                  props.setApproved(tx);
+    
+                }
+                else if(chaincomp === poachainID) { 
+                  // Grant the allowance target an allowance to spend our tokens.
+                  const tx = await ERC20TokenContract.approve( poacontractaddress, reformatamount);
+    
+                  await tx.wait();
+                  props.setApproved(tx);
+    
+                }
+                else if(chaincomp === testID) {
+                  // Grant the allowance target an allowance to spend our tokens.
+                  const tx = await ERC20TokenContract.approve( testnetcontractaddress, reformatamount);
+    
+                  await tx.wait();
+                  props.setApproved(tx);
+                }
 
             }
 
@@ -269,7 +321,7 @@ export default function Vesting(props) {
 
           const contractInstance =  await getethContract();
           const fees = await contractInstance.vaultFee();
-          const locking = await contractInstance.vestingLock(fees, owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+          const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
           await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
@@ -280,7 +332,7 @@ export default function Vesting(props) {
         
         const contractInstance =  await getbscContract();
         const fees = await contractInstance.vaultFee();
-        const locking = await contractInstance.vestingLock(fees, owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
      else if(chaincomp === poachainID) {
@@ -292,7 +344,7 @@ export default function Vesting(props) {
 
         const contractInstance =  await getpoaContract();
         const fees = await contractInstance.vaultFee();
-        const locking = await contractInstance.vestingLock(fees, owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
      else if(chaincomp === testID) {
@@ -303,7 +355,8 @@ export default function Vesting(props) {
 
 
         const contractInstance =  await gettestContract();
-        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const fees = await contractInstance.vaultFee();
+        const locking = await contractInstance.vestingLock(owner, tokenadd, ischecked, reformatamount, convertdatetg, tgBps, convertdatecycle, cyclerelease, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
 
@@ -367,7 +420,7 @@ export default function Vesting(props) {
 
           const contractInstance =  await getethContract();
           const fees = await contractInstance.vaultFee();
-          const locking = await contractInstance.multipleVestingLock(fees, ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+          const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
           await locking.wait();
        } 
        else if(chaincomp === bscchainID) {
@@ -381,7 +434,7 @@ export default function Vesting(props) {
         
         const contractInstance =  await getbscContract();
         const fees = await contractInstance.vaultFee();
-        const locking = await contractInstance.multipleVestingLock(fees, ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
      else if(chaincomp === poachainID) {
@@ -395,7 +448,7 @@ export default function Vesting(props) {
 
         const contractInstance =  await getpoaContract();
         const fees = await contractInstance.vaultFee();
-        const locking = await contractInstance.multipleVestingLock(fees, ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
      else if(chaincomp === testID) {
@@ -409,7 +462,8 @@ export default function Vesting(props) {
 
 
         const contractInstance =  await gettestContract();
-        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description);
+        const fees = await contractInstance.vaultFee();
+        const locking = await contractInstance.multipleVestingLock(ownerinput, reformatamount, tokenadd, ischecked, convertdatetg, tgBps, convertdatecycle, cyclerelease, description, {value: fees, gasLimit: 1000000, nonce: 105 || undefined});
         await locking.wait();
      }
 

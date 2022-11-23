@@ -121,7 +121,7 @@
 
 
 .toast {
-    position: absolute;
+    position: fixed;
     z-index: 99999999;
     left: 50%;
     top: 16%;

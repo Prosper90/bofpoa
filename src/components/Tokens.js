@@ -22,22 +22,36 @@ export default function Tokens(props) {
     const [lockswitch, setLockSwitch] = useState(false);
     const [myownlock, setMyOwmLock] = useState([]);
 
-    //erc20 token info
-    const [tokenNames, setTokenNames] = useState([]);
-    const [tokenSymb, setTokenSymb] = useState([]);
-    const [tokendecimal, setTokenDecimal] = useState([]);
-    
-
-    //erc20 tokeninfo all
-    const [tokenNamesall, setTokenNamesall] = useState([]);
-    const [tokenSymball, setTokenSymball] = useState([]);
-    const [tokenDecimalall, setTokenDecimalall] = useState([]);
-
     //view more
     const [viewbool, setViewbool] = useState(false);
     const [viewdata, setViewData] = useState();
     const [viewindex, setViewIndex] = useState();
 
+    //token details
+    //for name
+    const [tokeninfoone, setTokenInfoone] = useState();
+    const [tokeninfotwo, setTokenInfotwo] = useState();
+    const [tokeninfothree, setTokenInfothree] = useState();
+    const [tokeninfofour, setTokenInfofour] = useState();
+    const [tokeninfofive, setTokenInfofive] = useState();
+    const [tokeninfosix, setTokenInfosix] = useState();
+    const [tokeninfoseven, setTokenInfoseven] = useState();
+    //for sym
+    const [tokeninfoonesym, setTokenInfoonesym] = useState();
+    const [tokeninfotwosym, setTokenInfotwosym] = useState();
+    const [tokeninfothreesym, setTokenInfothreesym] = useState();
+    const [tokeninfofoursym, setTokenInfofoursym] = useState();
+    const [tokeninfofivesym, setTokenInfofivesym] = useState();
+    const [tokeninfosixsym, setTokenInfosixsym] = useState();
+    const [tokeninfosevensym, setTokenInfosevensym] = useState();
+    //for decimals
+    const [tokeninfoonedeci, setTokenInfoonedeci] = useState();
+    const [tokeninfotwodeci, setTokenInfotwodeci] = useState();
+    const [tokeninfothreedeci, setTokenInfothreedeci] = useState();
+    const [tokeninfofourdeci, setTokenInfofourdeci] = useState();
+    const [tokeninfofivedeci, setTokenInfofivedeci] = useState();
+    const [tokeninfosixdeci, setTokenInfosixdeci] = useState();
+    const [tokeninfosevendeci, setTokenInfosevendeci] = useState();
 
 
     const getethContract = async () => {
@@ -160,6 +174,7 @@ export default function Tokens(props) {
                 console.log("inside here")
                 const tokens = await contractInstancefour.getLockAt(index);
                 testarr.push(tokens);
+                console.log(testarr);
             }      
 
 
@@ -175,36 +190,191 @@ export default function Tokens(props) {
 
 
     //get token name
-    const getname = async (address) => {
+    const getname = (address, index) => {
         //console.log(address);
         //instantiate contract
+        let finalvalue;
         const ERC20TokenContract = new ethers.Contract(address, tokenAbi, props.signer);
 
         // Grant the allowance target an allowance to spend our tokens.
-        let tx = await ERC20TokenContract.name();
-        return tx;
+        ERC20TokenContract.name().then(name => {
+            
+            if(index == 0) {
+                setTokenInfoone(name);
+            } else if(index == 1){
+                setTokenInfotwo(name);
+            } else if(index == 2) {
+                setTokenInfothree(name);
+            } else if(index == 3) {
+                setTokenInfofour(name);
+            } else if(index == 4) {
+                setTokenInfofive(name);
+            } else if(index == 5) {
+                setTokenInfosix(name);
+            } else if(index == 6) {
+                setTokenInfoseven(name);
+            }
+        });
 
+        if(index == 0) {
+             finalvalue = tokeninfoone;
+        } else if(index == 1){
+            finalvalue = tokeninfotwo;
+        } else if(index == 2) {
+            finalvalue = tokeninfothree;
+        } else if(index == 3) {
+            finalvalue = tokeninfofour;
+        } else if(index == 4) {
+            finalvalue = tokeninfofive;
+        } else if(index == 5) {
+            finalvalue = tokeninfosix;
+        } else if(index == 6) {
+            finalvalue = tokeninfoseven;
+        }
+
+        return finalvalue;
     }
+
+
   
    //get token symbol
-    const getsymbol = async (address) => {
-        //instantiate contract
+    const getsymbol = (address, index) => {
+        let finalvalue;
         const ERC20TokenContract = new ethers.Contract(address, tokenAbi, props.signer);
-        
+
         // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.symbol();
-        return tx;
+        ERC20TokenContract.symbol().then(name => {
+            
+            if(index == 0) {
+                setTokenInfoonesym(name);
+            } else if(index == 1){
+                setTokenInfotwosym(name);
+            } else if(index == 2) {
+                setTokenInfothreesym(name);
+            } else if(index == 3) {
+                setTokenInfofoursym(name);
+            } else if(index == 4) {
+                setTokenInfofivesym(name);
+            } else if(index == 5) {
+                setTokenInfosixsym(name);
+            } else if(index == 6) {
+                setTokenInfosevensym(name);
+            }
+        });
+
+        if(index == 0) {
+             finalvalue = tokeninfoonesym;
+        } else if(index == 1){
+            finalvalue = tokeninfotwosym;
+        } else if(index == 2) {
+            finalvalue = tokeninfothreesym;
+        } else if(index == 3) {
+            finalvalue = tokeninfofoursym;
+        } else if(index == 4) {
+            finalvalue = tokeninfofivesym;
+        } else if(index == 5) {
+            finalvalue = tokeninfosixsym;
+        } else if(index == 6) {
+            finalvalue = tokeninfosevensym;
+        }
+
+        return finalvalue;
      }
+     
     
     //get token decimal
-    const getdecimal = async (address) => {
-        //instantiate contract
+    const getdecimal = (address, index) => {
+        let finalvalue;
         const ERC20TokenContract = new ethers.Contract(address, tokenAbi, props.signer);
-        
+
         // Grant the allowance target an allowance to spend our tokens.
-        const tx = await ERC20TokenContract.decimals();
-        return tx;
+        ERC20TokenContract.decimals().then(name => {
+            
+            if(index == 0) {
+                setTokenInfoonedeci(name);
+            } else if(index == 1){
+                setTokenInfotwodeci(name);
+            } else if(index == 2) {
+                setTokenInfothreedeci(name);
+            } else if(index == 3) {
+                setTokenInfofourdeci(name);
+            } else if(index == 4) {
+                setTokenInfofivedeci(name);
+            } else if(index == 5) {
+                setTokenInfosixdeci(name);
+            } else if(index == 6) {
+                setTokenInfosevendeci(name);
+            }
+        });
+
+        if(index == 0) {
+             finalvalue = tokeninfoonedeci;
+        } else if(index == 1){
+            finalvalue = tokeninfotwodeci;
+        } else if(index == 2) {
+            finalvalue = tokeninfothreedeci;
+        } else if(index == 3) {
+            finalvalue = tokeninfofourdeci;
+        } else if(index == 4) {
+            finalvalue = tokeninfofivedeci;
+        } else if(index == 5) {
+            finalvalue = tokeninfosixdeci;
+        } else if(index == 6) {
+            finalvalue = tokeninfosevendeci;
+        }
+
+        return finalvalue;
      }
+
+
+/*
+     const gettokenscallsone = async () => {
+        //myownlock
+        console.log("called one");
+        const temparrone = [];
+        const symbtempone = [];
+        const decitempsone = [];
+        console.log("Outside map")
+        myownlock[0]?.map( async (data) => {
+            console.log("Inside map")
+            const name = await getname(data.token);
+            console.log(name);
+            const symbol = await getsymbol(data.token);
+            const decimals = await getdecimal(data.token);
+                temparrone.push(name);
+                symbtempone.push(symbol);
+                decitempsone.push(decimals);
+        })
+        console.log(decitempsone);
+        console.log(symbtempone)
+            setTokenNames(temparrone);
+            setTokenSymb(symbtempone);
+            setTokenDecimal(decitempsone);
+
+    }
+
+
+    const gettokenscallstwo = async () => {
+        //lockedTokens
+        console.log("called two")
+        const temparr = [];
+        const symbtemp = [];
+        const decitemps = [];
+        lockedTokens?.map( async (data) => {
+            const name = await getname(data.token);
+            const symbol = await getsymbol(data.token);
+            const decimals = await getdecimal(data.token);
+            temparr.push(name);
+            symbtemp.push(symbol);
+            decitemps.push(decimals);
+        })
+        console.log(temparr, "checking temp");
+            setTokenNamesall(temparr);
+            setTokenSymball(symbtemp);
+            setTokenDecimalall(decitemps);
+        
+    }
+*/
 
 
     //get my locks 
@@ -312,8 +482,8 @@ export default function Tokens(props) {
 
 
     const getDate = (ama) => {
-
-        const dateama = new Date( parseInt(ama) );
+        console.log(parseInt(BigInt(ama)))
+        const dateama = new Date(parseInt(BigInt(ama)));
   
         const timeString = dateama.toUTCString().split(" ")[4]; //This will return your 17:50:00
         //For the date string part of it
@@ -363,52 +533,19 @@ export default function Tokens(props) {
 
 
 
+    const getercdetails = (index) => {
+        console.log("check check", index)
+       // return tokenNamesall[index];
+    }
+
+
+
 
         useEffect(() => {
             
             getTokens();
             console.log(lockedTokens);
-
-            if(myownlock) {
-                console.log("example started");
-                const temparr = [];
-                const symbtemp = [];
-                const decitemps = [];
-                myownlock[0]?.map( async (data) => {
-                    const name = await getname(data.token);
-                    const symbol = await getsymbol(data.token);
-                    const decimals = await getdecimal(data.token);
-                     temparr.push(name);
-                     symbtemp.push(symbol);
-                     decitemps.push(decimals);
-                })
-                console.log(decitemps);
-                console.log(symbtemp)
-                    setTokenNames(temparr);
-                    setTokenSymb(symbtemp);
-                    setTokenDecimal(decitemps);
-            }
-
-
-            if(lockedTokens) {
-                console.log("Locked tokens all running")
-                const temparr = [];
-                const symbtemp = [];
-                const decitemps = [];
-                lockedTokens?.map( async (data) => {
-                    const name = await getname(data.token);
-                    const symbol = await getsymbol(data.token);
-                    const decimals = await getdecimal(data.token);
-                     temparr.push(name);
-                     symbtemp.push(symbol);
-                     decitemps.push(decimals);
-                })
-                    setTokenNamesall(temparr);
-                    setTokenSymball(symbtemp);
-                    setTokenDecimalall(decitemps);
-            }
-
-
+        
         }, [props.signerAddress, myownlock]);
 
 
@@ -689,8 +826,8 @@ export default function Tokens(props) {
                                         <tbody>
                                         {lockedTokens?.map((data, index) => (
                                             <tr className='trfix' key={index}>
-                                            <td scope="row">{tokenNamesall[index]}</td>
-                                            <td>{ (Math.round(data?.amount/10 ** 18) * 10 ) / 10 } {tokenSymball[index]} </td>
+                                            <td scope="row">{getname(data.token, index)}</td>
+                                            <td>{ (Math.round(data?.amount/10 ** 18) * 10 ) / 10 } {getsymbol(data.token, index)} </td>
                                             <td className='viewhover' onClick={ () => viewmore(data, index)} >view</td>
                                             </tr>
                                         ))}
@@ -699,8 +836,8 @@ export default function Tokens(props) {
                                         <tbody>
                                         { myownlock[0]?.map((data, index) => (
                                             <tr className='trfix' key={index}>
-                                            <td scope="row">{tokenNames[index]}</td>
-                                            <td>{ (Math.round(data?.amount/10 ** 18) * 10 ) / 10 } {tokenSymb[index]} </td>
+                                            <td scope="row">{getname(data.token, index)}</td>
+                                            <td>{ (Math.round(data?.amount/10 ** 18) * 10 ) / 10 } {getsymbol(data.token, index)} </td>
                                             <td className='viewhover' onClick={ () => viewmore(data, index)} >view</td>
                                             </tr>
                                         ))}
@@ -728,11 +865,11 @@ export default function Tokens(props) {
                                     </div>
 
                                     <div className="col-6 d-flex flex-column gap-3 align-items-end text-white">
-                                      <div className="infoleft">{ (Math.round(viewdata?.amount/10 ** 18) * 10 ) / 10 } {tokenSymball[viewindex]}</div>
+                                      <div className="infoleft">{ (Math.round(viewdata?.amount/10 ** 18) * 10 ) / 10 } {getsymbol(viewdata.token, viewindex)}</div>
                                       <div className="infoleft">{viewdata.token}</div>
-                                      <div className="infoleft">{ !lockswitch ? tokenNamesall[viewindex] : tokenNames[viewindex] }</div>
-                                      <div className="infoleft">{ !lockswitch ? tokenSymball[viewindex] : tokenSymb[viewindex]}</div>
-                                      <div className="infoleft">{ !lockswitch ? tokenDecimalall[viewindex] : tokendecimal[viewindex]}</div>
+                                      <div className="infoleft">{getname(viewdata.token, viewindex)}</div>
+                                      <div className="infoleft">{getsymbol(viewdata.token, viewindex)}</div>
+                                      <div className="infoleft">{getdecimal(viewdata.token, viewindex)}</div>
                                       <div className="infoledt">{getDate(viewdata.lockDate)}</div>
                                     </div>
                                  </div>
@@ -766,7 +903,7 @@ export default function Tokens(props) {
                                         </div>
                                     }
                                     
-                                    { !lockswitch ?
+                                    { !lockswitch && props.signerAddress ?
 
                                      <>
                                        { lockedTokens?.length === 0 && 
