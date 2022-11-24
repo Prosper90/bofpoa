@@ -9,6 +9,9 @@
     align-items: center;
     height: 471px;
     color: #FFFF;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size);
+    font-weight: var(--body-font-weight);
 }
 
 
@@ -23,6 +26,9 @@
     height: 100%;
     color: #FFFF;
     padding: 10px;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size);
+    font-weight: var(--body-font-weight);
 }
 
 
@@ -37,6 +43,9 @@
     height: 100%;
     color: #FFFF;
     padding: 20px;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size);
+    font-weight: var(--body-font-weight);
 }
 
 
@@ -50,6 +59,9 @@
     align-items: center;
     height: 100%;
     color: #FFFF;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size);
+    font-weight: var(--body-font-weight);
 }
 
 
@@ -65,6 +77,9 @@
     align-items: center;
     height: 356px;
     color: #FFFF;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size);
+    font-weight: var(--body-font-weight);
 }
 
 
@@ -234,9 +249,33 @@ Token
     width: 100%;
 }
 
+.header-arrange {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin: 25px;
+}
+
 
 
 @media screen and (max-width: 600px) {
+
+    .header-arrange {
+        display: flex;
+        flex-direction: column ;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .slect-sides {
+        width: 100%;
+        display: flex;
+        gap: 11px;
+        align-items: flex-start;
+        justify-content: center;
+        font-size: 20px;
+        padding-bottom: 12px;
+    }
 
     .lockswitch-buttons {
         display: flex;

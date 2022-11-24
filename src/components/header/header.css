@@ -17,6 +17,9 @@
 
 .each {
     margin: 0px 10px;
+    font-family: --body-font-family;
+    font-size: 18.5px;
+    font-weight: --body-font-weight;
 }
 
 .add {

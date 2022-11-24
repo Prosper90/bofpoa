@@ -7,6 +7,7 @@ import Tokens from './components/Tokens';
 import Lockups from './components/Lockups';
 import Vesting from './components/Vesting';
 import Notifier from './components/Notifier';
+import { ethers } from 'ethers';
 
 function App() {
 
@@ -30,6 +31,24 @@ function App() {
 
   //getWallet address
   const getWalletAddress = () => {
+    signer.getAddress().
+    then(address => {
+      setSignerAddress(address)
+    })
+  }
+
+
+  const getWalletAddresstwo = async () => {
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    setProvider(provider);
+
+
+    console.log("Second guy");
+    provider?.send("eth_requestAccounts", []);
+    const signer = await provider.getSigner();
+    setSigner(signer);
+
+
     signer.getAddress().
     then(address => {
       setSignerAddress(address)
@@ -103,7 +122,7 @@ function App() {
                 setMessage={setMessage}
                 approved={approved}
                 setApproved={setApproved}
-                getWalletAddress={getWalletAddress}
+                getWalletAddress={getWalletAddresstwo}
                 chain={chain}
                />} />
           </Routes>
@@ -129,7 +148,7 @@ function App() {
                 setMessage={setMessage}
                 approved={approved}
                 setApproved={setApproved}
-                getWalletAddress={getWalletAddress}
+                getWalletAddress={getWalletAddresstwo}
                />} />
           </Routes>
 
@@ -155,7 +174,7 @@ function App() {
                 setMessage={setMessage}
                 approved={approved}
                 setApproved={setApproved}
-                getWalletAddress={getWalletAddress}
+                getWalletAddress={getWalletAddresstwo}
                />} />
           </Routes>
 

@@ -180,6 +180,12 @@ export default function Lockups(props) {
         //const amount = e.target.amount.value;
         console.log(amountget);
         console.log(tokenaddress)
+        if(amountget == "" || amountget == "") {
+            props.setbg("warning");
+            props.setMessage("Form fields should not be empty");
+            props.setShow(true);
+            return;
+          }
 
 
         const chaincomp = await props.signer.getChainId();
@@ -548,32 +554,7 @@ export default function Lockups(props) {
                                 style={{ perspective: 1000 }}
                                 >
 
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1512ec562243a"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1512ec562243a-inner" />
-                                </div>
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1c094b50d1f04"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1c094b50d1f04-inner" />
-                                </div>
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1e90d8d67ad5d"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1e90d8d67ad5d-inner" />
-                                </div>
-
-                                  <h3 className='text-white'>create your own unique token lock.</h3>
+                                  <h3 className='text-white w-100 text-center'>Create your own unique token lock.</h3>
 
                                 </div>
                             </div>
@@ -621,7 +602,7 @@ export default function Lockups(props) {
                                             type="text"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            placeholder="token address"
+                                            placeholder="Token address"
                                             name="tokenadd"
                                             value={tokenaddress}
                                             onChange={(e) => setTokenaddress(e.target.value)}
@@ -634,7 +615,7 @@ export default function Lockups(props) {
                                             type="number"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            placeholder="amount to lock up"
+                                            placeholder="Amount to lock up"
                                             name="amount"
                                             value={amountget}
                                             onChange={(e) => setamountget(e.target.value)}
@@ -653,12 +634,12 @@ export default function Lockups(props) {
                                         </div>
 
                                         <div className="form-group">
-                                            <label htmlFor="exampleInputPassword1 text-dark" style={{color: '#000', marginBottom: '10px'}} >description</label>
+                                            <label htmlFor="exampleInputPassword1 text-dark" style={{color: '#000', marginBottom: '10px'}} >Description</label>
                                             <input
                                             type="text"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            placeholder="description"
+                                            placeholder="Description"
                                             name="description"
                                             />
                                         </div>
@@ -682,9 +663,15 @@ export default function Lockups(props) {
 
                                         </div>
 
+
                                         </form>
+                                        
 
                                     </div>
+
+                                       <div className="text-white mt-3">
+                                            Exclude PinkLock's lockup address 0x407993575c91ce7643a4d4cCACc9A98c36eE1BBE from fees, incentives, and the maximum transaction amount to begin locking tokens.
+                                        </div>
                                     
 
                                    </div>

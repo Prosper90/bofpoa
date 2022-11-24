@@ -8,6 +8,7 @@ import { ethers } from 'ethers';
 import wallet from "../img/vault.png";
 import { useNavigate } from 'react-router-dom';
 import { testnetcontractaddress, tokenAbi, ethcontractABI, ethcontractaddress, bsccontractaddress, poacontractaddress, ethchainID, bscchainID, poachainID, testID } from '../utils/constants';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 
 
@@ -52,6 +53,7 @@ export default function Tokens(props) {
     const [tokeninfofivedeci, setTokenInfofivedeci] = useState();
     const [tokeninfosixdeci, setTokenInfosixdeci] = useState();
     const [tokeninfosevendeci, setTokenInfosevendeci] = useState();
+
 
 
     const getethContract = async () => {
@@ -483,7 +485,7 @@ export default function Tokens(props) {
 
     const getDate = (ama) => {
         console.log(parseInt(BigInt(ama)))
-        const dateama = new Date(parseInt(BigInt(ama)));
+        const dateama = new Date(parseInt(BigInt(ama)) * 1000);
   
         const timeString = dateama.toUTCString().split(" ")[4]; //This will return your 17:50:00
         //For the date string part of it
@@ -495,6 +497,27 @@ export default function Tokens(props) {
         return finalDateString;
     
      }
+
+
+     const getDatetwo = (ama) => {
+
+        const dateama = new Date(parseInt(BigInt(ama)) * 1000);
+        const currentdate = new Date().getTime();
+
+        const unlockdate = dateama - currentdate;
+        console.log(unlockdate);
+  
+        const timeString = dateama.toUTCString().split(" ")[4]; //This will return your 17:50:00
+        //For the date string part of it
+        const dateNumber = unlockdate.getDate();
+        const monthNumber = unlockdate.getMonth() + 1;
+        const yearNumber = unlockdate.getFullYear();
+        const dateString = `${dateNumber}/${monthNumber}/${yearNumber}`;
+        const finalDateString = [dateString, timeString].join(" ");
+        return finalDateString;
+    
+     }
+
 
      const lockup = () => {
         navigate(`/Lockups`);
@@ -539,6 +562,10 @@ export default function Tokens(props) {
     }
 
 
+          //display address
+          const displayaddr = (token) => {
+            return `${token?.substring(0,14)}`;
+        }
 
 
         useEffect(() => {
@@ -861,16 +888,16 @@ export default function Tokens(props) {
                                        <div className="info">Token Name</div>
                                        <div className="info">Token Symbol</div>
                                        <div className="info">Token Decimals</div>
-                                       <div className="info">Unlock time(UTC)</div>
+                                       <div className="info">lock time(UTC)</div>
                                     </div>
 
                                     <div className="col-6 d-flex flex-column gap-3 align-items-end text-white">
                                       <div className="infoleft">{ (Math.round(viewdata?.amount/10 ** 18) * 10 ) / 10 } {getsymbol(viewdata.token, viewindex)}</div>
-                                      <div className="infoleft">{viewdata.token}</div>
+                                      <div className="infoleft">{ window.innerWidth < 600 ? displayaddr(viewdata.token) : viewdata.token } { window.innerWidth < 600 && "..."}</div>
                                       <div className="infoleft">{getname(viewdata.token, viewindex)}</div>
                                       <div className="infoleft">{getsymbol(viewdata.token, viewindex)}</div>
                                       <div className="infoleft">{getdecimal(viewdata.token, viewindex)}</div>
-                                      <div className="infoledt">{getDate(viewdata.lockDate)}</div>
+                                      <div className="infoleft">{getDate(viewdata.lockDate)}</div>
                                     </div>
                                  </div>
                                    {lockswitch &&

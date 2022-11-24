@@ -708,33 +708,7 @@ export default function Vesting(props) {
                                 className="n2-ss-layer-row-inner "
                                 style={{ perspective: 1000 }}
                                 >
-
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1512ec562243a"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1512ec562243a-inner" />
-                                </div>
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1c094b50d1f04"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1c094b50d1f04-inner" />
-                                </div>
-                                <div
-                                    className="n2-ss-layer n2-ow n-uc-1e90d8d67ad5d"
-                                    data-pm="default"
-                                    data-hidemobileportrait={1}
-                                    data-sstype="col"
-                                >
-                                    <div className="n2-ss-layer-col n2-ss-layer-with-background n2-ss-layer-content n-uc-1e90d8d67ad5d-inner" />
-                                </div>
-
-                                   <h3 className='text-white'>Make your own token vesting contract.</h3>
+                                   <h3 className='text-white w-100 text-center'>Make your own token vesting contract.</h3>
 
                                 </div>
                             </div>
@@ -760,8 +734,11 @@ export default function Vesting(props) {
 
                                     <div className="border-containerthree">
 
-                                    <div className="top"> 
-                                        <div className="choose">Create your Vest</div> 
+                                    <div className="header-arrange">
+
+                                        <div className="w-100">
+                                           <h4 className="text-white header-text">Create your Vest</h4>
+                                        </div> 
 
                                         <div className="slect-sides">
                                         <div className={ !multipleVest ? "chooseactive" : "normalchoose" } onClick={() => selectsides(false)}>Single</div>
@@ -859,13 +836,13 @@ export default function Vesting(props) {
                                             </div>
 
                                             <div className="form-group">
-                                                <label htmlFor="exampleInputPassword1 text-dark">description</label>
+                                                <label htmlFor="exampleInputPassword1 text-dark">Description</label>
                                                 <input
                                                 type="text"
                                                 className="form-control"
                                                 id="exampleInputPassword1"
                                                 placeholder="description"
-                                                name="description"
+                                                name="Description"
                                                 />
                                             </div>
 
@@ -983,7 +960,7 @@ export default function Vesting(props) {
                                             type="text"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            placeholder="description"
+                                            placeholder="Description"
                                             name="description"
                                             />
                                         </div>
