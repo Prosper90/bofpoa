@@ -14,14 +14,6 @@ export default function Home() {
   return (
     <div className='container-banner full-width' >
         <Sectionone />
-        <Sectiontwo />
-        <Sectionthree />
-        <Sectionfour />
-        <Sectionfive />
-        <Sectionsix />
-        <Sectionseven />
-        <Sectioneight />
-        <Sectionnine />
     </div>
   )
 }

@@ -1,0 +1,97 @@
+.eachheader {
+    background: green;
+    color: #FFF;
+    padding: 10px;
+    position: relative;
+    height: 65px;
+}
+
+.eachheader:before {
+    content: '';
+    position: absolute;
+    top: 33px;
+    right: -1px;
+    border-top: 33px solid green;
+    border-right: 36px solid #242422;
+    width: 0;
+    transform-origin: 54% 0;
+    transform: rotate(0deg);
+}
+
+
+
+.bg-sectionone {
+    margin-top: 38px;
+    border: 1px solid green;
+    padding: 20px;
+    color: #FFF;
+    background: #1f1f1f;
+}
+
+
+.editedbutton {
+    border-radius: 0px;
+}
+
+
+.stylesearch {
+    background: #121212;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    height: 33px;
+}
+
+
+.stylesearch input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #FFF;
+}
+
+
+
+.hometable {
+    color: #FFF;
+    border-collapse: separate;
+    border-spacing:0 20px;
+}
+
+
+.trfixtwo {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    color: #FFF;
+    width: 100%;
+}
+
+.tablecontain td, .tablecontain th {
+    border: none;
+}
+
+
+
+.bg-sectiontwo {
+    margin-top: 38px;
+    border: 1px solid green;
+    padding: 20px;
+    color: #FFF;
+}
+
+
+.partone {
+    display: flex;
+    gap: 10px;
+}
+
+
+
+.bg-sectionthree {
+    margin-top: 38px;
+    border: 1px solid green;
+    padding: 20px;
+    color: #FFF;
+    background-color: green;
+    height: 250px;
+}
