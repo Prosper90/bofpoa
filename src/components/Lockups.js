@@ -670,7 +670,7 @@ export default function Lockups(props) {
                                     </div>
 
                                        <div className="text-white mt-3">
-                                            Exclude PinkLock's lockup address 0x407993575c91ce7643a4d4cCACc9A98c36eE1BBE from fees, incentives, and the maximum transaction amount to begin locking tokens.
+                                            Exclude Bank lockup address { props.chain === 1 ? ethcontractaddress : props.chain === 56 ? bsccontractaddress : props.chain === 493 ? poacontractaddress : testnetcontractaddress } from fees, incentives, and the transaction amount to locking tokens.
                                         </div>
                                     
 

@@ -1,9 +1,16 @@
+.overall-main {
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size);
+    font-weight: var(--body-font-weight);
+}
+
 .eachheader {
     background: green;
     color: #FFF;
     padding: 10px;
     position: relative;
     height: 65px;
+    font-family: var(--body-font-family);
 }
 
 .eachheader:before {
@@ -26,6 +33,7 @@
     padding: 20px;
     color: #FFF;
     background: #1f1f1f;
+    font-family: var(--body-font-family);
 }
 
 
@@ -56,6 +64,7 @@
     color: #FFF;
     border-collapse: separate;
     border-spacing:0 20px;
+    font-family: var(--body-font-family);
 }
 
 
@@ -66,7 +75,7 @@
     width: 100%;
 }
 
-.tablecontain td, .tablecontain th {
+.hometable td, .hometable th {
     border: none;
 }
 
@@ -77,6 +86,7 @@
     border: 1px solid green;
     padding: 20px;
     color: #FFF;
+    font-family: var(--body-font-family);
 }
 
 
@@ -94,4 +104,39 @@
     color: #FFF;
     background-color: green;
     height: 250px;
+    font-family: var(--body-font-family);
 }
+
+.smallup {
+    font-size: 13px;
+}
+
+.smalldown {
+    font-size: 13px;
+    color: grey;
+}
+
+
+.tablecontainer {
+    width: 100%;
+}
+
+
+@media screen and (max-width: 600px) {
+
+    .tablecontainer {
+        width: 320px;
+        overflow-x: scroll;
+    }
+
+
+    .stylesearch {
+        background: #121212;
+        width: 45%;
+        display: flex;
+        justify-content: center;
+        height: 33px;
+    }
+    
+}
+

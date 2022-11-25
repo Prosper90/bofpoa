@@ -240,41 +240,41 @@ export default function Sectionone() {
                                 style={{ perspective: 1000 }}
                                 >
 
-                                  <div className="w-100 d-flex flex-column gy-3">
+                                  <div className="w-100 d-flex flex-column gy-3 overall-main">
                                       <h3 className='text-white w-100 text-center'>LIQUIDITY & TOKEN LOCK FOR PROJECTS AND COMMUNITY</h3>
 
-                                      <div className="row">
+                                      <div className="row gy-4">
 
-                                         <div className="col-4">
+                                         <div className=" col-12 col-md-4 col-lg-4">
                                             <div className="col d-flex gx-1 eachheader">
                                                 <div className="icon">img</div>
                                                 <div className="contain d-flex flex-column gy-1">
                                                     <h5>$ 45,506,493.09</h5>
-                                                    <small className="text">TOTAL LOCKED TOKEN VALUE</small>
+                                                    <small className="text smallup">TOTAL LOCKED TOKEN VALUE</small>
                                                 </div>
                                             </div>
                                          </div>
 
 
 
-                                         <div className="col-4">
+                                         <div className="col-12 col-md-4 col-lg-4">
                                             <div className="col d-flex gx-1 eachheader">
                                                 <div className="icon">img</div>
                                                 <div className="contain d-flex flex-column gy-1">
                                                     <h5>$ 45,506,493.09</h5>
-                                                    <small className="text">TOTAL LOCKED LIQUIDITY VALUE</small>
+                                                    <small className="text smallup">TOTAL LOCKED LIQUIDITY VALUE</small>
                                                 </div>
                                             </div>
                                          </div>
 
 
 
-                                         <div className="col-4">
+                                         <div className="col-12 col-md-4 col-lg-4">
                                             <div className="col d-flex gx-1 eachheader">
                                                 <div className="icon">img</div>
                                                 <div className="contain d-flex flex-column gy-1">
                                                     <h5>396</h5>
-                                                    <small className="text">PROJECT LOCKED WITH POL</small>
+                                                    <small className="text smallup">PROJECT LOCKED WITH POL</small>
                                                 </div>
                                             </div>
                                          </div>
@@ -319,7 +319,7 @@ export default function Sectionone() {
                                            </form>
                                         </div>
 
-                                        <div className="tablecontain reponsice-table">
+                                        <div className="tablecontainer" >
                                             <table className="table hometable">
                                             <thead className='thead'>
                                                 <tr>
@@ -391,7 +391,11 @@ export default function Sectionone() {
                                             </table>
                                         </div>
 
-
+                                       <div className="w-100 d-flex justify-content-center">
+                                          <div className="text-success"> icon </div>
+                                          <div className="text-white">page 1 of 3</div>
+                                          <div className="text-success"> icon </div>
+                                       </div>
                                     </div>
 
                                     {/* section two */}
@@ -399,33 +403,33 @@ export default function Sectionone() {
                                     <div className="col-12 bg-sectiontwo">
                                         <h5 className="header text-success align-self-center text-center mb-4 ">EASY LIQUIDITY LOCKING WITH PROOF OF LOCKER</h5>
 
-                                        <div className="row">
+                                        <div className="row gy-4 justify-content-center align-items-center">
                                         
-                                          <div className="partone col-4">
+                                          <div className="partone col-12 col-md-4 col-lg-4">
                                             <div className="icon">icon</div>
                                             <div className="d-flex flex-column">
                                                 <h5 className='text-success'>LOCKED LIQUIDITY</h5>
-                                                <small>INPUT YOUR LIQUIDITY TOKENS INTO A TIME-RELEASED VAULT THAT RETURNS THE TOKENS AT A SPECIFIED POINT</small>
+                                                <small className='smalldown'>INPUT YOUR LIQUIDITY TOKENS INTO A TIME-RELEASED VAULT THAT RETURNS THE TOKENS AT A SPECIFIED POINT</small>
                                             </div>
                                           </div>
 
 
 
-                                          <div className="partone col-4">
+                                          <div className="partone col-12 col-md-4 col-lg-4">
                                             <div className="icon">icon</div>
                                             <div className="d-flex flex-column">
                                                 <h5 className='text-success'>LOCKED TOKENS</h5>
-                                                <small>INPUT YOUR TOKENS INTO A TIME-RELEASED VAULT THAT RETURNS THE TOKENS AT A SPECIFIED POINT</small>
+                                                <small className='smalldown'>INPUT YOUR TOKENS INTO A TIME-RELEASED VAULT THAT RETURNS THE TOKENS AT A SPECIFIED POINT</small>
                                             </div>
                                           </div>
 
 
 
-                                          <div className="partone col-4">
+                                          <div className="partone col-12 col-md-4 col-lg-4">
                                             <div className="icon">icon</div>
                                             <div className="d-flex flex-column">
                                                 <h5 className='text-success' >SHARE WITH COMMUNITY</h5>
-                                                <small>PROUDL DISPLAY YOUR LOCKED TOKENS AND LOCKED LIQUIDITY TO THE WORLD AS PROOF</small>
+                                                <small className='smalldown'>PROUDL DISPLAY YOUR LOCKED TOKENS AND LOCKED LIQUIDITY TO THE WORLD AS PROOF</small>
                                             </div>
                                           </div>
 
@@ -446,7 +450,11 @@ export default function Sectionone() {
                                               <small className='w-75'>LOCK YOUR TOKEN OR LIQUIDITY IN A FEW SIMPLE STEPS WITH PROOF OF LOCKERS,
                                                 OUR PROCESS IS EASY FAST AND SECURE.
                                               </small>
-                                              <button className="btn btn-success my-2 my-sm-0" >CREATE NEW LOCKUPS</button>
+
+                                              <div className="mt-3">
+                                                 <button className="btn btn-success my-2 my-sm-0" >CREATE NEW LOCKUPS</button>
+                                              </div>
+                                              
                                            </div>
 
 
